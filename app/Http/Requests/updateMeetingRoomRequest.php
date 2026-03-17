@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class storeMeetingRoomRequest extends FormRequest
+class updateMeetingRoomRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,10 +21,12 @@ class storeMeetingRoomRequest extends FormRequest
      */
     public function rules(): array
     {
+        $roomId = $this->route('id');
+
         return [
-            'name' => 'required|string|max:100|unique:meeting_rooms,name',
-            'location' => 'required|string|max:200',
-            'capacity' => 'required|integer|min:1',
+            'name' => 'sometimes|required|string|max:100|unique:meeting_rooms,name,' . $roomId,
+            'location' => 'sometimes|required|string|max:200',
+            'capacity' => 'sometimes|required|integer|min:1',
             'is_active' => 'sometimes|boolean',
         ];
     }

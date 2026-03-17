@@ -83,7 +83,7 @@ class EmployeeController extends Controller
     }
 
     /**
-     * Detail karyawan berdasarkan ID.
+     * Detail karyawan.
      */
     public function show(string $id)
     {
