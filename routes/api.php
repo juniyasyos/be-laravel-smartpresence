@@ -8,8 +8,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeetingsRoomController;
+use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login']);
+
+// Route for dashboard
+Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
 // Route for employees
@@ -18,6 +22,10 @@ Route::get('/employee/{id}', [EmployeeController::class, 'show']);
 Route::post('/employee', [EmployeeController::class, 'store']);
 Route::patch('/employee/{id}', [EmployeeController::class, 'update']);
 Route::delete('/employee/{id}', [EmployeeController::class, 'destroy']);
+
+// Route for dropdown data (jenis tenaga & unit kerja)
+Route::get('/employee-types', [EmployeeController::class, 'employeeTypes']);
+Route::get('/work-units', [EmployeeController::class, 'workUnits']);
 
 // Route for users
 Route::get('/users', [UserController::class, 'index']);
