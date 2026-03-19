@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeetingsRoomController;
+use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DashboardController;
 
 Route::post('/login', [AuthController::class, 'login']);
@@ -44,3 +45,17 @@ Route::post('/meeting-room', [MeetingsRoomController::class, 'store']);
 Route::patch('/meeting-room/{id}', [MeetingsRoomController::class, 'update']);
 Route::patch('/meeting-room/{id}/toggle-status', [MeetingsRoomController::class, 'toggleStatus']);
 Route::delete('/meeting-room/{id}', [MeetingsRoomController::class, 'destroy']);
+
+// Route for meetings
+Route::get('/meetings', [MeetingController::class, 'index']);
+Route::get('/meeting/{id}', [MeetingController::class, 'show']);
+Route::post('/meeting', [MeetingController::class, 'store']);
+Route::patch('/meeting/{id}', [MeetingController::class, 'update']);
+Route::delete('/meeting/{id}', [MeetingController::class, 'destroy']);
+
+// Meeting status batch update
+Route::patch('/meetings/update-statuses', [MeetingController::class, 'updateStatuses']);
+
+// Attendance
+Route::post('/meeting/{id}/scan', [MeetingController::class, 'scanBarcode']);
+Route::patch('/meeting/{id}/attendance/{participantId}', [MeetingController::class, 'manualAttendance']);
