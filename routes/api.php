@@ -10,6 +10,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\MeetingsRoomController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EmployeeImportExportController;
 
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -17,6 +18,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/dashboard', [DashboardController::class, 'index']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
+// Route import export employee
+Route::get('/employees/export', [EmployeeImportExportController::class, 'export']);
+Route::post('/employees/import', [EmployeeImportExportController::class, 'import']);
 // Route for employees
 Route::get('/employees', [EmployeeController::class, 'index']);
 Route::get('/employee/{id}', [EmployeeController::class, 'show']);

@@ -28,7 +28,7 @@ class updateEmployeeRequest extends FormRequest
             'nip' => 'sometimes|required|string|max:50|unique:employees,nip,' . $employeeId,
             'employee_type_id' => 'sometimes|required|integer|exists:employee_types,id',
             'work_unit_id' => 'nullable|integer|exists:work_units,id',
-            'position_id' => 'sometimes|required|integer|exists:positions,id',
+            'position_id' => 'nullable|integer|exists:positions,id',
             'email' => 'nullable|email|max:150',
             'phone' => 'nullable|string|max:20',
             'is_active' => 'sometimes|boolean',

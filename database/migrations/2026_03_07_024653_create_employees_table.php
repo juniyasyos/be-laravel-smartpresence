@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nip',50)->unique();
             $table->foreignId('employee_type_id')->constrained('employee_types');
             $table->foreignId('work_unit_id')->constrained('work_units')->nullable();
-            $table->foreignId('position_id')->constrained('positions');
+            $table->foreignId('position_id')->constrained('positions')->nullable();
             $table->string('email',150)->nullable();
             $table->string('phone',20)->nullable();
             $table->string('signature_path',500)->nullable();
