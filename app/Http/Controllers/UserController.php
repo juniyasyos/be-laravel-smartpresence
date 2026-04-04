@@ -57,7 +57,6 @@ class UserController extends Controller
     {
         try {
             $validated = $request->validated();
-            $validated['password'] = bcrypt($validated['password']);
 
             $result = User::create($validated);
             $result->load('role');
@@ -120,10 +119,8 @@ class UserController extends Controller
 
             $validated = $request->validated();
 
-            // Hash password jika diisi, jika tidak hapus dari update
-            if (!empty($validated['password'])) {
-                $validated['password'] = bcrypt($validated['password']);
-            } else {
+            //password tetap raw
+            if (empty($validated['password'])) {
                 unset($validated['password']);
             }
 

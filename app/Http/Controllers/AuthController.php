@@ -16,7 +16,7 @@ class AuthController extends Controller
         
         $user = User::where('username', $request->username)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
+        if (!$user || $user->password !== $request->password) {
             return response()->json([
                 'message' => 'Username atau password salah'
             ], 401);
