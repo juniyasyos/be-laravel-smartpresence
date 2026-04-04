@@ -126,7 +126,7 @@ class MeetingController extends Controller
     /**
      * Detail rapat dengan peserta dan status kehadiran.
      */
-    public function show(string $id)
+    public function show(Request $request, string $id)
     {
         try {
             // Auto-update status for this meeting
@@ -165,6 +165,15 @@ class MeetingController extends Controller
                 'hadir'       => $participantsWithAttendance->where('status', 'hadir')->count(),
                 'tidak_hadir' => $participantsWithAttendance->where('status', 'tidak_hadir')->count(),
             ];
+
+            // Filter peserta berdasarkan nama (setelah hitung summary agar summary tetap semua data)
+            if ($request->filled('search')) {
+                $search = strtolower($request->query('search'));
+                $participantsWithAttendance = $participantsWithAttendance->filter(function ($item) use ($search) {
+                    $name = $item['employee']->name ?? '';
+                    return str_contains(strtolower($name), $search);
+                });
+            }
 
             return response()->json([
                 'message' => 'Meeting fetched successfully',
@@ -378,6 +387,29 @@ class MeetingController extends Controller
             $existingAttendance = Attendance::where('meeting_id', $id)
                 ->where('employee_id', $participant->employee_id)
                 ->first();
+
+            $status = $request->input('status', 'hadir');
+            
+            // Handle if status passed as boolean
+            if (is_bool($status)) {
+                $status = $status ? 'hadir' : 'tidak_hadir';
+            }
+
+            if ($status === 'tidak_hadir') {
+                if ($existingAttendance) {
+                    $existingAttendance->delete();
+                }
+                
+                $participant->load(['employee.workUnit', 'employee.position']);
+                
+                return response()->json([
+                    'message' => 'Status kehadiran berhasil diubah menjadi tidak hadir',
+                    'data'    => [
+                        'participant' => $participant,
+                        'attendance'  => null,
+                    ],
+                ], 200);
+            }
 
             if ($existingAttendance) {
                 return response()->json([
