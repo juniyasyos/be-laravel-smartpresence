@@ -26,9 +26,9 @@ class storeEmployeeRequest extends FormRequest
             'nip' => 'required|string|max:50|unique:employees,nip',
             'employee_type_id' => 'required|integer|exists:employee_types,id',
             'work_unit_id' => 'nullable|integer|exists:work_units,id',
-
             'email' => 'nullable|email|max:150',
             'phone' => 'nullable|string|max:20',
+            'signature' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'is_active' => 'sometimes|boolean',
         ];
     }

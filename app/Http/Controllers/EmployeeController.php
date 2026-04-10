@@ -8,6 +8,7 @@ use App\Http\Requests\updateEmployeeRequest;
 use App\Models\Employee;
 use App\Models\EmployeeType;
 use App\Models\WorkUnit;
+use Illuminate\Support\Facades\Storage;
 use Exception;
 
 class EmployeeController extends Controller
@@ -67,6 +68,13 @@ class EmployeeController extends Controller
     {
         try {
             $validated = $request->validated();
+
+            // Handle signature file upload
+            if ($request->hasFile('signature')) {
+                $path = $request->file('signature')->store('signatures', 'public');
+                $validated['signature_path'] = $path;
+            }
+
             $result = Employee::create($validated);
             $result->load(['employeeType', 'workUnit']);
 
@@ -121,6 +129,25 @@ class EmployeeController extends Controller
             }
 
             $validated = $request->validated();
+
+            // Handle signature file upload
+            if ($request->hasFile('signature')) {
+                // Delete old signature if exists
+                if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
+                    Storage::disk('public')->delete($result->signature_path);
+                }
+                $path = $request->file('signature')->store('signatures', 'public');
+                $validated['signature_path'] = $path;
+            }
+
+            // Handle signature removal (when client sends remove_signature = true)
+            if ($request->boolean('remove_signature')) {
+                if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
+                    Storage::disk('public')->delete($result->signature_path);
+                }
+                $validated['signature_path'] = null;
+            }
+
             $result->update($validated);
             $result->load(['employeeType', 'workUnit']);
 
@@ -147,6 +174,11 @@ class EmployeeController extends Controller
                 return response()->json([
                     'message' => 'Employee not found',
                 ], 404);
+            }
+
+            // Delete signature file if exists
+            if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
+                Storage::disk('public')->delete($result->signature_path);
             }
 
             $result->delete();

@@ -17,6 +17,18 @@ class Employee extends Model
         'is_active'
     ];
 
+    protected $appends = ['signature_url'];
+
+    /**
+     * Accessor untuk mendapatkan URL tanda tangan.
+     */
+    public function getSignatureUrlAttribute()
+    {
+        return $this->signature_path
+            ? asset('storage/' . $this->signature_path)
+            : null;
+    }
+
     public function attendances()
     {
         return $this->hasMany(Attendance::class);
