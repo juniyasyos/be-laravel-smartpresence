@@ -75,7 +75,15 @@ Jalankan migrasi untuk membuat tabel-tabel yang diperlukan. Jika ada data awal, 
 php artisan migrate --seed
 ```
 
-### 7. Menjalankan Aplikasi
+### 7. Storage Link
+
+Link storage dari public
+
+```bash
+php artisan storage:link
+```
+
+### 8. Menjalankan Aplikasi
 
 ```bash
 php artisan serve
