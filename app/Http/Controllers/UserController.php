@@ -141,6 +141,8 @@ class UserController extends Controller
 
     /**
      * Hapus pengguna.
+     * Data terkait (rapat, assignment, dokumen) tetap tersimpan,
+     * hanya referensi user-nya yang di-null-kan.
      */
     public function destroy(string $id)
     {
@@ -152,12 +154,25 @@ class UserController extends Controller
                 ], 404);
             }
 
+            // Hanya super_admin yang tidak bisa dihapus
             if ($result->role_id === 1) {
                 return response()->json([
                     'message' => 'Super Admin tidak dapat dihapus',
                 ], 403);
             }
 
+            // Nullify semua referensi user di tabel terkait
+            // agar data rapat, assignment, dokumen tetap ada
+            $result->meetingsCreated()->update(['created_by' => null]);
+            $result->meetingAssignments()->update(['user_id' => null]);
+            $result->meetingAssignedBy()->update(['assigned_by' => null]);
+            $result->attendancesVerified()->update(['verified_by' => null]);
+            $result->meetingDocuments()->update(['uploaded_by' => null]);
+
+            // Revoke semua API tokens (Sanctum)
+            $result->tokens()->delete();
+
+            // Hapus user
             $result->delete();
 
             return response()->json([

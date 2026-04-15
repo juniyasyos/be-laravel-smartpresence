@@ -43,7 +43,17 @@ class EmployeeController extends Controller
 
             // Filter berdasarkan unit kerja
             if ($request->filled('work_unit_id')) {
-                $query->where('work_unit_id', $request->query('work_unit_id'));
+                $workUnitId = $request->query('work_unit_id');
+                // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
+                if ($workUnitId === 'All' || $workUnitId === null) {
+                    $query->whereNull('work_unit_id');
+                } else {
+                    // Jika ada unit kerja spesifik, tampilkan karyawan dari unit itu PLUS yang tidak punya unit kerja
+                    $query->where(function ($q) use ($workUnitId) {
+                        $q->where('work_unit_id', $workUnitId)
+                          ->orWhereNull('work_unit_id');
+                    });
+                }
             }
 
             $perPage = $request->query('per_page', 10);
@@ -220,6 +230,17 @@ class EmployeeController extends Controller
     {
         try {
             $result = WorkUnit::all();
+            
+            // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
+            $noneOption = (object)[
+                'id' => null,
+                'work_unit' => 'none',
+                'created_at' => null,
+                'updated_at' => null,
+            ];
+            
+            $result = collect($result)->prepend($noneOption);
+            
             return response()->json([
                 'message' => 'Work units fetched successfully',
                 'data' => $result,

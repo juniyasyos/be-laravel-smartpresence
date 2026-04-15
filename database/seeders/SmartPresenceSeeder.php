@@ -35,7 +35,7 @@ class SmartPresenceSeeder extends Seeder
             [
                 'username'=>'SuperAdmin',
                 'email'=>'superadmin@mail.com',
-                'password'=>Hash::make('password'),
+                'password'=>'password',
                 'role_id'=>1,
                 'is_active'=>true,
                 'created_at'=>now(),
@@ -44,7 +44,7 @@ class SmartPresenceSeeder extends Seeder
             [
                 'username'=>'AdminRapat',
                 'email'=>'admin@mail.com',
-                'password'=>Hash::make('password'),
+                'password'=>'password',
                 'role_id'=>2,
                 'is_active'=>true,
                 'created_at'=>now(),
