@@ -425,6 +425,8 @@ class MeetingController extends Controller
                 
                 $participant->load(['employee.workUnit']);
                 
+                Cache::tags(['meetings'])->flush();
+                
                 return response()->json([
                     'message' => 'Status kehadiran berhasil diubah menjadi tidak hadir',
                     'data'    => [
