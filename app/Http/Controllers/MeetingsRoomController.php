@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\MeetingRoom;
-use App\Http\Requests\storeMeetingRoomRequest;
-use App\Http\Requests\updateMeetingRoomRequest;
+use App\Http\Requests\StoreMeetingRoomRequest;
+use App\Http\Requests\UpdateMeetingRoomRequest;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -49,7 +49,7 @@ class MeetingsRoomController extends Controller
     /**
      * Tambah ruang rapat baru.
      */
-    public function store(storeMeetingRoomRequest $request)
+    public function store(StoreMeetingRoomRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -95,7 +95,7 @@ class MeetingsRoomController extends Controller
     /**
      * Update ruang rapat.
      */
-    public function update(updateMeetingRoomRequest $request, string $id)
+    public function update(UpdateMeetingRoomRequest $request, string $id)
     {
         try {
             $result = MeetingRoom::find($id);

@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Role;
-use App\Http\Requests\storeUserRequest;
-use App\Http\Requests\updateUserRequest;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Exception;
@@ -54,7 +54,7 @@ class UserController extends Controller
     /**
      * Tambah pengguna baru.
      */
-    public function store(storeUserRequest $request)
+    public function store(StoreUserRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -102,7 +102,7 @@ class UserController extends Controller
     /**
      * Update pengguna.
      */
-    public function update(updateUserRequest $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
         try {
             $result = User::find($id);

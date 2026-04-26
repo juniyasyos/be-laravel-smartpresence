@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\WorkUnit;
-use App\Http\Requests\storeWorkUnitRequest;
-use App\Http\Requests\updateWorkUnitRequest;
+use App\Http\Requests\StoreWorkUnitRequest;
+use App\Http\Requests\UpdateWorkUnitRequest;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -46,7 +46,7 @@ class WorkUnitController extends Controller
     /**
      * Tambah unit kerja baru.
      */
-    public function store(storeWorkUnitRequest $request)
+    public function store(StoreWorkUnitRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -93,7 +93,7 @@ class WorkUnitController extends Controller
     /**
      * Update unit kerja.
      */
-    public function update(updateWorkUnitRequest $request, string $id)
+    public function update(UpdateWorkUnitRequest $request, string $id)
     {
         try {
             $result = WorkUnit::find($id);

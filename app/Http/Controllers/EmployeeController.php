@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\storeEmployeeRequest;
-use App\Http\Requests\updateEmployeeRequest;
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Models\EmployeeType;
 use App\Models\WorkUnit;
@@ -78,7 +78,7 @@ class EmployeeController extends Controller
     /**
      * Tambah karyawan baru.
      */
-    public function store(storeEmployeeRequest $request)
+    public function store(StoreEmployeeRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -137,7 +137,7 @@ class EmployeeController extends Controller
     /**
      * Update data karyawan.
      */
-    public function update(updateEmployeeRequest $request, string $id)
+    public function update(UpdateEmployeeRequest $request, string $id)
     {
         try {
             $result = Employee::find($id);
