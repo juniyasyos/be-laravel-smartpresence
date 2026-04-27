@@ -28,7 +28,7 @@ class EmployeeController extends Controller
         try {
             $cacheKey = 'employees_index_' . md5($request->fullUrl());
             $result = Cache::tags(['employees'])->remember($cacheKey, 3600, function () use ($request) {
-                $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'deleted_at', 'phone', 'email')
+                $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'phone', 'email', 'signature_path')
                     ->with([
                         'employeeType:id,employee_type',
                         'workUnit:id,work_unit'
@@ -63,7 +63,7 @@ class EmployeeController extends Controller
                     }
                 }
 
-                $perPage = (int) $request->query('per_page', 10);
+                $perPage = (int) $request->query('per_page', 25);
                 return $query->latest()->paginate($perPage);
             });
 
@@ -92,6 +92,9 @@ class EmployeeController extends Controller
                 $path = $request->file('signature')->store('signatures', 'public');
                 $validated['signature_path'] = $path;
             }
+
+            // Remove signature file object from validated data to keep it clean
+            unset($validated['signature']);
 
             $result = Employee::create($validated);
             $result->load(['employeeType', 'workUnit']);
@@ -170,6 +173,9 @@ class EmployeeController extends Controller
                 }
                 $validated['signature_path'] = null;
             }
+
+            // Remove signature and remove_signature from validated data before update
+            unset($validated['signature'], $validated['remove_signature']);
 
             $result->update($validated);
             $result->load(['employeeType', 'workUnit']);
