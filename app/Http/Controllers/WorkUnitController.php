@@ -22,7 +22,7 @@ class WorkUnitController extends Controller
     {
         try {
             $cacheKey = 'work_units_index_' . md5($request->fullUrl());
-            $result = Cache::tags(['work_units'])->remember($cacheKey, 3600, function () use ($request) {
+            $result = Cache::remember($cacheKey, 3600, function () use ($request) {
                 $query = WorkUnit::select('id', 'work_unit', 'created_at')
                     ->withCount('employees');
 
@@ -58,7 +58,6 @@ class WorkUnitController extends Controller
             $result = WorkUnit::create($validated);
             $result->loadCount('employees');
 
-            Cache::tags(['work_units'])->flush();
             Cache::forget('work_units'); // Also clear the simple key used for dropdowns
 
             return response()->json([
@@ -115,7 +114,6 @@ class WorkUnitController extends Controller
             $result->update($validated);
             $result->loadCount('employees');
 
-            Cache::tags(['work_units'])->flush();
             Cache::forget('work_units');
 
             return response()->json([
@@ -150,7 +148,6 @@ class WorkUnitController extends Controller
             }
 
             $result->delete();
-            Cache::tags(['work_units'])->flush();
             Cache::forget('work_units');
 
             return response()->json([

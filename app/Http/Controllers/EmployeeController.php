@@ -27,7 +27,7 @@ class EmployeeController extends Controller
     {
         try {
             $cacheKey = 'employees_index_' . md5($request->fullUrl());
-            $result = Cache::tags(['employees'])->remember($cacheKey, 3600, function () use ($request) {
+            $result = Cache::remember($cacheKey, 3600, function () use ($request) {
                 $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'phone', 'email', 'signature_path')
                     ->with([
                         'employeeType:id,employee_type',
@@ -99,7 +99,7 @@ class EmployeeController extends Controller
             $result = Employee::create($validated);
             $result->load(['employeeType', 'workUnit']);
 
-            Cache::tags(['employees'])->flush();
+            $this->clearEmployeeCache();
 
             return response()->json([
                 'message' => 'Employee created successfully',
@@ -120,7 +120,7 @@ class EmployeeController extends Controller
     {
         try {
             $cacheKey = 'employees_show_' . $id;
-            $result = Cache::tags(['employees'])->remember($cacheKey, 3600, function () use ($id) {
+            $result = Cache::remember($cacheKey, 3600, function () use ($id) {
                 return Employee::with(['employeeType', 'workUnit'])->find($id);
             });
             if (!$result) {
@@ -180,7 +180,7 @@ class EmployeeController extends Controller
             $result->update($validated);
             $result->load(['employeeType', 'workUnit']);
 
-            Cache::tags(['employees'])->flush();
+            $this->clearEmployeeCache();
 
             return response()->json([
                 'message' => 'Employee updated successfully',
@@ -214,7 +214,7 @@ class EmployeeController extends Controller
 
             $result->delete();
 
-            Cache::tags(['employees'])->flush();
+            $this->clearEmployeeCache();
 
             return response()->json([
                 'message' => 'Employee deleted successfully',
@@ -276,5 +276,14 @@ class EmployeeController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Clear all employee-related cache keys.
+     */
+    private function clearEmployeeCache(): void
+    {
+        Cache::forget('employee_types');
+        Cache::forget('work_units');
     }
 }

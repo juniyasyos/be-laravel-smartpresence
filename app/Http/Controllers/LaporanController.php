@@ -39,63 +39,58 @@ class LaporanController extends Controller
             // Auto-update statuses sebelum menampilkan
             $this->autoUpdateStatuses();
 
-            $cacheKey = 'laporan_index_' . md5($request->fullUrl());
-            $meetings = Cache::tags(['meetings'])->remember($cacheKey, 3600, function () use ($request) {
-                $query = Meeting::with(['room:id,name,location'])
-                    ->withExists([
-                        'documents as has_undangan' => function ($q) {
-                            $q->where('type', 'undangan');
-                        },
-                        'documents as has_dokumentasi' => function ($q) {
-                            $q->where('type', '!=', 'undangan');
-                        },
-                        'minutes as has_notulensi'
-                    ]);
+            $query = Meeting::with(['room:id,name,location'])
+                ->withExists([
+                    'documents as has_undangan' => function ($q) {
+                        $q->where('type', 'undangan');
+                    },
+                    'documents as has_dokumentasi' => function ($q) {
+                        $q->where('type', '!=', 'undangan');
+                    },
+                    'minutes as has_notulensi'
+                ]);
 
-                // Filter: search judul atau nama ruangan
-                if ($request->filled('search')) {
-                    $search = $request->query('search');
-                    $query->where(function ($q) use ($search) {
-                        $q->where('title', 'like', "%{$search}%")
-                          ->orWhere('organizer', 'like', "%{$search}%")
-                          ->orWhereHas('room', function ($r) use ($search) {
-                              $r->where('name', 'like', "%{$search}%");
-                          });
-                    });
-                }
-
-                // Filter: tanggal
-                if ($request->filled('date')) {
-                    $query->whereDate('start_time', $request->query('date'));
-                }
-
-                // Filter: status
-                if ($request->filled('status')) {
-                    $query->where('status', $request->query('status'));
-                }
-
-                $perPage = (int) $request->query('per_page', 15);
-                $paginated = $query->latest('start_time')->paginate($perPage);
-
-                // Transform: tambahkan info lampiran
-                $paginated->getCollection()->transform(function ($meeting) {
-                    return [
-                        'id'         => $meeting->id,
-                        'title'      => $meeting->title,
-                        'organizer'  => $meeting->organizer,
-                        'start_time' => $meeting->start_time,
-                        'end_time'   => $meeting->end_time,
-                        'status'     => $meeting->status,
-                        'room'       => $meeting->room,
-                        'lampiran'   => [
-                            'has_undangan'    => (bool) $meeting->has_undangan,
-                            'has_notulensi'   => (bool) $meeting->has_notulensi,
-                            'has_dokumentasi' => (bool) $meeting->has_dokumentasi,
-                        ],
-                    ];
+            // Filter: search judul atau nama ruangan
+            if ($request->filled('search')) {
+                $search = $request->query('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                      ->orWhere('organizer', 'like', "%{$search}%")
+                      ->orWhereHas('room', function ($r) use ($search) {
+                          $r->where('name', 'like', "%{$search}%");
+                      });
                 });
+            }
 
-                return $paginated;
+            // Filter: tanggal
+            if ($request->filled('date')) {
+                $query->whereDate('start_time', $request->query('date'));
+            }
+
+            // Filter: status
+            if ($request->filled('status')) {
+                $query->where('status', $request->query('status'));
+            }
+
+            $perPage = (int) $request->query('per_page', 15);
+            $meetings = $query->latest('start_time')->paginate($perPage);
+
+            // Transform: tambahkan info lampiran
+            $meetings->getCollection()->transform(function ($meeting) {
+                return [
+                    'id'         => $meeting->id,
+                    'title'      => $meeting->title,
+                    'organizer'  => $meeting->organizer,
+                    'start_time' => $meeting->start_time,
+                    'end_time'   => $meeting->end_time,
+                    'status'     => $meeting->status,
+                    'room'       => $meeting->room,
+                    'lampiran'   => [
+                        'has_undangan'    => (bool) $meeting->has_undangan,
+                        'has_notulensi'   => (bool) $meeting->has_notulensi,
+                        'has_dokumentasi' => (bool) $meeting->has_dokumentasi,
+                    ],
+                ];
             });
 
             return response()->json([
@@ -128,65 +123,62 @@ class LaporanController extends Controller
     public function show(string $id)
     {
         try {
-            $cacheKey = 'laporan_show_' . $id;
-            $responseData = Cache::tags(['meetings'])->remember($cacheKey, 3600, function () use ($id) {
-                $meeting = Meeting::select('id', 'title', 'organizer', 'start_time', 'end_time', 'status', 'room_id')
-                    ->with([
-                        'room:id,name,location',
-                        'minutes',
-                        'documents',
-                    ])
-                    ->withCount([
-                        'participants',
-                        'attendances as hadir_count' => function ($q) {
-                            $q->where('status', 'hadir');
-                        }
-                    ])
-                    ->find($id);
+            $meeting = Meeting::select('id', 'title', 'organizer', 'start_time', 'end_time', 'status', 'room_id')
+                ->with([
+                    'room:id,name,location',
+                    'minutes',
+                    'documents',
+                ])
+                ->withCount([
+                    'participants',
+                    'attendances as hadir_count' => function ($q) {
+                        $q->where('status', 'hadir');
+                    }
+                ])
+                ->find($id);
 
-                if (!$meeting) return null;
+            if (!$meeting) {
+                return response()->json(['message' => 'Rapat tidak ditemukan'], 404);
+            }
 
-                // Summary kehadiran
-                $totalPeserta  = $meeting->participants_count;
-                $hadirCount    = $meeting->hadir_count;
-                $tidakHadir    = max(0, $totalPeserta - $hadirCount);
+            // Summary kehadiran
+            $totalPeserta  = $meeting->participants_count;
+            $hadirCount    = $meeting->hadir_count;
+            $tidakHadir    = max(0, $totalPeserta - $hadirCount);
 
-                // Dokumen + URL publik
-                $documents = $meeting->documents->map(function ($doc) {
-                    return [
-                        'id'        => $doc->id,
-                        'type'      => $doc->type,
-                        'file_name' => $doc->file_name,
-                        'file_size' => $doc->file_size,
-                        'mime_type' => $doc->mime_type,
-                        'url'       => asset('storage/' . $doc->file_path),
-                        'created_at' => $doc->created_at,
-                    ];
-                });
-
+            // Dokumen + URL publik
+            $documents = $meeting->documents->map(function ($doc) {
                 return [
-                    'meeting'            => $meeting->only([
-                        'id', 'title', 'organizer', 'start_time', 'end_time', 'status',
-                    ]),
-                    'room'               => $meeting->room,
-                    'attendance_summary' => [
-                        'total'       => $totalPeserta,
-                        'hadir'       => $hadirCount,
-                        'tidak_hadir' => $tidakHadir,
-                    ],
-                    'notulensi'          => $meeting->minutes,
-                    'documents'          => $documents,
-                    'lampiran'           => [
-                        'has_undangan'    => $documents->where('type', 'undangan')->isNotEmpty(),
-                        'has_notulensi'   => $meeting->minutes !== null,
-                        'has_dokumentasi' => $documents->whereNotIn('type', ['undangan'])->isNotEmpty(),
-                    ],
+                    'id'        => $doc->id,
+                    'type'      => $doc->type,
+                    'file_name' => $doc->file_name,
+                    'file_size' => $doc->file_size,
+                    'mime_type' => $doc->mime_type,
+                    'url'       => asset('storage/' . $doc->file_path),
+                    'created_at' => $doc->created_at,
                 ];
             });
 
-            if (!$responseData) {
-                return response()->json(['message' => 'Rapat tidak ditemukan'], 404);
-            }
+            $responseData = [
+                'meeting'            => $meeting->only([
+                    'id', 'title', 'organizer', 'start_time', 'end_time', 'status',
+                ]),
+                'room'               => $meeting->room,
+                'attendance_summary' => [
+                    'total'       => $totalPeserta,
+                    'hadir'       => $hadirCount,
+                    'tidak_hadir' => $tidakHadir,
+                ],
+                'notulensi'          => $meeting->minutes,
+                'documents'          => $documents,
+                'lampiran'           => [
+                    'has_undangan'    => $documents->where('type', 'undangan')->isNotEmpty(),
+                    'has_notulensi'   => $meeting->minutes !== null,
+                    'has_dokumentasi' => $documents->whereNotIn('type', ['undangan'])->isNotEmpty(),
+                ],
+            ];
+
+
 
             return response()->json([
                 'message' => 'Detail laporan rapat berhasil diambil',
@@ -215,85 +207,82 @@ class LaporanController extends Controller
     public function export(string $id)
     {
         try {
-            $cacheKey = 'laporan_export_' . $id;
-            $exportData = Cache::tags(['meetings'])->remember($cacheKey, 3600, function () use ($id) {
-                $meeting = Meeting::with([
-                    'room:id,name,location',
-                    'participants.employee:id,full_name,nip,work_unit_id',
-                    'participants.employee.workUnit:id,work_unit',
-                    'attendances:id,meeting_id,employee_id,check_in_time,status',
-                    'minutes',
-                    'documents',
-                ])
-                ->withCount([
-                    'participants',
-                    'attendances as hadir_count' => function($q) {
-                        $q->where('status', 'hadir');
-                    }
-                ])
-                ->find($id);
+            $meeting = Meeting::with([
+                'room:id,name,location',
+                'participants.employee:id,full_name,nip,work_unit_id',
+                'participants.employee.workUnit:id,work_unit',
+                'attendances:id,meeting_id,employee_id,check_in_time,status',
+                'minutes',
+                'documents',
+            ])
+            ->withCount([
+                'participants',
+                'attendances as hadir_count' => function($q) {
+                    $q->where('status', 'hadir');
+                }
+            ])
+            ->find($id);
 
-                if (!$meeting) return null;
+            if (!$meeting) {
+                return response()->json(['message' => 'Rapat tidak ditemukan'], 404);
+            }
 
-                // Hash Map untuk absensi O(1)
-                $attendancesMap = $meeting->attendances->keyBy('employee_id');
+            // Hash Map untuk absensi O(1)
+            $attendancesMap = $meeting->attendances->keyBy('employee_id');
 
-                // Peserta + status kehadiran
-                $peserta = $meeting->participants->map(function ($p) use ($attendancesMap) {
-                    $attendance = $attendancesMap->get($p->employee_id);
-
-                    return [
-                        'nama'        => $p->employee?->full_name ?? 'Karyawan (Dihapus)',
-                        'nip'         => $p->employee?->nip ?? '-',
-                        'unit_kerja'  => $p->employee?->workUnit?->work_unit ?? '-',
-                        'status'      => $attendance ? 'Hadir' : 'Tidak Hadir',
-                        'check_in'    => $attendance?->check_in_time,
-                    ];
-                });
-
-                // Dokumen + URL
-                $documents = $meeting->documents->map(function ($doc) {
-                    return [
-                        'id'        => $doc->id,
-                        'type'      => $doc->type,
-                        'file_name' => $doc->file_name,
-                        'mime_type' => $doc->mime_type,
-                        'url'       => asset('storage/' . $doc->file_path),
-                    ];
-                });
+            // Peserta + status kehadiran
+            $peserta = $meeting->participants->map(function ($p) use ($attendancesMap) {
+                $attendance = $attendancesMap->get($p->employee_id);
 
                 return [
-                    'rapat'       => [
-                        'id'         => $meeting->id,
-                        'judul'      => $meeting->title,
-                        'penyelenggara' => $meeting->organizer,
-                        'ruangan'    => $meeting->room?->name,
-                        'lokasi'     => $meeting->room?->location,
-                        'tanggal'    => Carbon::parse($meeting->start_time)->translatedFormat('d F Y'),
-                        'waktu_mulai'  => Carbon::parse($meeting->start_time)->format('H:i'),
-                        'waktu_selesai' => Carbon::parse($meeting->end_time)->format('H:i'),
-                        'status'     => $meeting->status,
-                    ],
-                    'ringkasan_kehadiran' => [
-                        'total'       => $meeting->participants_count,
-                        'hadir'       => $meeting->hadir_count,
-                        'tidak_hadir' => max(0, $meeting->participants_count - $meeting->hadir_count),
-                    ],
-                    'peserta'     => $peserta,
-                    'notulensi'   => $meeting->minutes ? [
-                        'content'          => $meeting->minutes->content,
-                        'notulis_name'     => $meeting->minutes->notulis_name,
-                        'notulis_position' => $meeting->minutes->notulis_position,
-                        'director_name'     => $meeting->minutes->director_name,
-                        'director_position' => $meeting->minutes->director_position,
-                    ] : null,
-                    'dokumen'     => $documents,
+                    'nama'        => $p->employee?->full_name ?? 'Karyawan (Dihapus)',
+                    'nip'         => $p->employee?->nip ?? '-',
+                    'unit_kerja'  => $p->employee?->workUnit?->work_unit ?? '-',
+                    'status'      => $attendance ? 'Hadir' : 'Tidak Hadir',
+                    'check_in'    => $attendance?->check_in_time,
                 ];
             });
 
-            if (!$exportData) {
-                return response()->json(['message' => 'Rapat tidak ditemukan'], 404);
-            }
+            // Dokumen + URL
+            $documents = $meeting->documents->map(function ($doc) {
+                return [
+                    'id'        => $doc->id,
+                    'type'      => $doc->type,
+                    'file_name' => $doc->file_name,
+                    'mime_type' => $doc->mime_type,
+                    'url'       => asset('storage/' . $doc->file_path),
+                ];
+            });
+
+            $exportData = [
+                'rapat'       => [
+                    'id'         => $meeting->id,
+                    'judul'      => $meeting->title,
+                    'penyelenggara' => $meeting->organizer,
+                    'ruangan'    => $meeting->room?->name,
+                    'lokasi'     => $meeting->room?->location,
+                    'tanggal'    => Carbon::parse($meeting->start_time)->translatedFormat('d F Y'),
+                    'waktu_mulai'  => Carbon::parse($meeting->start_time)->format('H:i'),
+                    'waktu_selesai' => Carbon::parse($meeting->end_time)->format('H:i'),
+                    'status'     => $meeting->status,
+                ],
+                'ringkasan_kehadiran' => [
+                    'total'       => $meeting->participants_count,
+                    'hadir'       => $meeting->hadir_count,
+                    'tidak_hadir' => max(0, $meeting->participants_count - $meeting->hadir_count),
+                ],
+                'peserta'     => $peserta,
+                'notulensi'   => $meeting->minutes ? [
+                    'content'          => $meeting->minutes->content,
+                    'notulis_name'     => $meeting->minutes->notulis_name,
+                    'notulis_position' => $meeting->minutes->notulis_position,
+                    'director_name'     => $meeting->minutes->director_name,
+                    'director_position' => $meeting->minutes->director_position,
+                ] : null,
+                'dokumen'     => $documents,
+            ];
+
+
 
             return response()->json([
                 'message' => 'Data export rapat berhasil diambil',
@@ -325,27 +314,23 @@ class LaporanController extends Controller
         $now = Carbon::now();
 
         // Update ke selesai
-        $updated1 = Meeting::where('status', '!=', 'dibatalkan')
+        Meeting::where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'selesai')
             ->where('end_time', '<', $now)
             ->update(['status' => 'selesai']);
 
         // Update ke berlangsung
-        $updated2 = Meeting::where('status', '!=', 'dibatalkan')
+        Meeting::where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'berlangsung')
             ->where('start_time', '<=', $now)
             ->where('end_time', '>=', $now)
             ->update(['status' => 'berlangsung']);
 
         // Update ke menunggu
-        $updated3 = Meeting::where('status', '!=', 'dibatalkan')
+        Meeting::where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'menunggu')
             ->where('start_time', '>', $now)
             ->update(['status' => 'menunggu']);
-            
-        if ($updated1 + $updated2 + $updated3 > 0) {
-            Cache::tags(['meetings'])->flush();
-        }
 
         Cache::put($lockKey, true, 60);
     }

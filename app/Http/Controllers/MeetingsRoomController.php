@@ -22,7 +22,7 @@ class MeetingsRoomController extends Controller
     {
         try {
             $cacheKey = 'meeting_rooms_index_' . md5($request->fullUrl());
-            $result = Cache::tags(['meeting_rooms'])->remember($cacheKey, 3600, function () use ($request) {
+            $result = Cache::remember($cacheKey, 3600, function () use ($request) {
                 $query = MeetingRoom::select('id', 'name', 'location', 'capacity', 'is_active');
 
                 // Search berdasarkan nama atau lokasi
@@ -59,7 +59,6 @@ class MeetingsRoomController extends Controller
             $validated = $request->validated();
             $result = MeetingRoom::create($validated);
             
-            Cache::tags(['meeting_rooms'])->flush();
             Cache::forget('meeting_rooms_all');
 
             return response()->json([
@@ -115,7 +114,6 @@ class MeetingsRoomController extends Controller
             $validated = $request->validated();
             $result->update($validated);
 
-            Cache::tags(['meeting_rooms'])->flush();
             Cache::forget('meeting_rooms_all');
 
             return response()->json([
@@ -145,7 +143,6 @@ class MeetingsRoomController extends Controller
 
             $result->update(['is_active' => !$result->is_active]);
 
-            Cache::tags(['meeting_rooms'])->flush();
             Cache::forget('meeting_rooms_all');
 
             return response()->json([
@@ -181,7 +178,6 @@ class MeetingsRoomController extends Controller
 
             $result->delete();
 
-            Cache::tags(['meeting_rooms'])->flush();
             Cache::forget('meeting_rooms_all');
 
             return response()->json([

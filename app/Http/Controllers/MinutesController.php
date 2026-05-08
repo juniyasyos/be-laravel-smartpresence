@@ -77,7 +77,7 @@ class MinutesController extends Controller
                 ]
             );
 
-            Cache::tags(['meetings'])->flush();
+
 
             return response()->json([
                 'message' => 'Minutes saved successfully',
@@ -157,7 +157,7 @@ class MinutesController extends Controller
                 'uploaded_by'=> auth()->id() ?? 3,
             ]);
 
-            Cache::tags(['meetings'])->flush();
+
 
             return response()->json([
                 'message' => 'Document uploaded successfully',
@@ -193,7 +193,7 @@ class MinutesController extends Controller
 
             $document->delete();
 
-            Cache::tags(['meetings'])->flush();
+
 
             return response()->json(['message' => 'Document deleted successfully'], 200);
         } catch (Exception $e) {

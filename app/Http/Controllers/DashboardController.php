@@ -144,28 +144,24 @@ class DashboardController extends Controller
 
         $now = Carbon::now();
 
-        $updated1 = Meeting::whereDate('start_time', $date)
+        Meeting::whereDate('start_time', $date)
             ->where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'selesai')
             ->where('end_time', '<', $now)
             ->update(['status' => 'selesai']);
 
-        $updated2 = Meeting::whereDate('start_time', $date)
+        Meeting::whereDate('start_time', $date)
             ->where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'berlangsung')
             ->where('start_time', '<=', $now)
             ->where('end_time', '>=', $now)
             ->update(['status' => 'berlangsung']);
 
-        $updated3 = Meeting::whereDate('start_time', $date)
+        Meeting::whereDate('start_time', $date)
             ->where('status', '!=', 'dibatalkan')
             ->where('status', '!=', 'menunggu')
             ->where('start_time', '>', $now)
             ->update(['status' => 'menunggu']);
-
-        if ($updated1 || $updated2 || $updated3) {
-            Cache::tags(['meetings'])->flush();
-        }
 
         Cache::put($lockKey, true, 60);
     }
