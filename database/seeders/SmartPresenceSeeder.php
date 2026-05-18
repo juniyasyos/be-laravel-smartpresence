@@ -117,9 +117,26 @@ class SmartPresenceSeeder extends Seeder
                 'is_active'=>true,
                 'created_at'=>now(),
                 'updated_at'=>now()
-            ],
+            ]
         ]);
 
+        $employees = [];
+
+        for ($i = 4; $i <= 103; $i++) {
+            $employees[] = [
+                'full_name' => 'Employee '.$i,
+                'nip' => 'EMP'.str_pad($i, 3, '0', STR_PAD_LEFT),
+                'employee_type_id' => ($i % 2) + 1,
+                'work_unit_id' => ($i % 2) + 1,
+                'email' => 'employee'.$i.'@hospital.com',
+                'phone' => '08123'.str_pad($i, 6, '0', STR_PAD_LEFT),
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        DB::table('employees')->insert($employees);
 
         /*
         |--------------------------------------------------------------------------
