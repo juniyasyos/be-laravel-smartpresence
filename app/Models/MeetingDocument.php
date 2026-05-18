@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class MeetingDocument extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'meeting_id',
         'type',

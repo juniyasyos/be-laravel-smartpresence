@@ -280,12 +280,8 @@ class MeetingController extends Controller
                 ], 404);
             }
 
-            // Delete related data
-            $meeting->attendances()->delete();
-            $meeting->participants()->delete();
+            // Soft delete — data relasi tetap tersimpan agar bisa di-restore
             $meeting->delete();
-
-
 
             return response()->json([
                 'message' => 'Meeting deleted successfully',

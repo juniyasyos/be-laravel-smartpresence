@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Meeting extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'title',
         'organizer',
@@ -13,7 +16,8 @@ class Meeting extends Model
         'start_time',
         'end_time',
         'status',
-        'created_by'
+        'created_by',
+        'deleted_at'
     ];
 
     protected $casts = [

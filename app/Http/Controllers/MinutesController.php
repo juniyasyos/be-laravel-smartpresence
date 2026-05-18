@@ -188,12 +188,8 @@ class MinutesController extends Controller
                 return response()->json(['message' => 'Document not found'], 404);
             }
 
-            // Hapus file dari storage
-            Storage::disk('public')->delete($document->file_path);
-
+            // Soft delete — file tetap tersimpan agar bisa di-restore
             $document->delete();
-
-
 
             return response()->json(['message' => 'Document deleted successfully'], 200);
         } catch (Exception $e) {

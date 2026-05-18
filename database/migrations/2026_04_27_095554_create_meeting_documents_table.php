@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamp('notulis_signed_at')->nullable();
             $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

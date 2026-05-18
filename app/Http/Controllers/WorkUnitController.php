@@ -21,20 +21,17 @@ class WorkUnitController extends Controller
     public function index(Request $request)
     {
         try {
-            $cacheKey = 'work_units_index_' . md5($request->fullUrl());
-            $result = Cache::remember($cacheKey, 3600, function () use ($request) {
-                $query = WorkUnit::select('id', 'work_unit', 'created_at')
-                    ->withCount('employees');
+            $query = WorkUnit::select('id', 'work_unit', 'created_at')
+                ->withCount('employees');
 
-                // Search berdasarkan nama unit kerja
-                if ($request->filled('search')) {
-                    $search = $request->query('search');
-                    $query->where('work_unit', 'like', "%{$search}%");
-                }
+            // Search berdasarkan nama unit kerja
+            if ($request->filled('search')) {
+                $search = $request->query('search');
+                $query->where('work_unit', 'like', "%{$search}%");
+            }
 
-                $perPage = (int) $request->query('per_page', 10);
-                return $query->latest()->paginate($perPage);
-            });
+            $perPage = (int) $request->query('per_page', 10);
+            $result = $query->latest()->paginate($perPage);
 
             return response()->json([
                 'message' => 'Work units fetched successfully',
@@ -147,6 +144,7 @@ class WorkUnitController extends Controller
                 ], 422);
             }
 
+            // Soft delete
             $result->delete();
             Cache::forget('work_units');
 

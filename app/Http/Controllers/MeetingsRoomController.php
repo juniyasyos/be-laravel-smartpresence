@@ -21,22 +21,19 @@ class MeetingsRoomController extends Controller
     public function index(Request $request)
     {
         try {
-            $cacheKey = 'meeting_rooms_index_' . md5($request->fullUrl());
-            $result = Cache::remember($cacheKey, 3600, function () use ($request) {
-                $query = MeetingRoom::select('id', 'name', 'location', 'capacity', 'is_active');
+            $query = MeetingRoom::select('id', 'name', 'location', 'capacity', 'is_active');
 
-                // Search berdasarkan nama atau lokasi
-                if ($request->filled('search')) {
-                    $search = $request->query('search');
-                    $query->where(function ($q) use ($search) {
-                        $q->where('name', 'like', "%{$search}%")
-                          ->orWhere('location', 'like', "%{$search}%");
-                    });
-                }
+            // Search berdasarkan nama atau lokasi
+            if ($request->filled('search')) {
+                $search = $request->query('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                      ->orWhere('location', 'like', "%{$search}%");
+                });
+            }
 
-                $perPage = (int) $request->query('per_page', 10);
-                return $query->latest()->paginate($perPage);
-            });
+            $perPage = (int) $request->query('per_page', 10);
+            $result = $query->latest()->paginate($perPage);
 
             return response()->json([
                 'message' => 'Meeting rooms fetched successfully',
@@ -170,12 +167,7 @@ class MeetingsRoomController extends Controller
                 ], 404);
             }
 
-            if ($result->meetings_count > 0) {
-                return response()->json([
-                    'message' => 'Ruangan tidak dapat dihapus karena masih digunakan dalam ' . $result->meetings_count . ' rapat',
-                ], 422);
-            }
-
+            // Soft delete
             $result->delete();
 
             Cache::forget('meeting_rooms_all');

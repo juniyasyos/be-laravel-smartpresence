@@ -26,46 +26,43 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         try {
-            $cacheKey = 'employees_index_' . md5($request->fullUrl());
-            $result = Cache::remember($cacheKey, 3600, function () use ($request) {
-                $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'phone', 'email', 'signature_path')
-                    ->with([
-                        'employeeType:id,employee_type',
-                        'workUnit:id,work_unit'
-                    ]);
+            $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'phone', 'email', 'signature_path')
+                ->with([
+                    'employeeType:id,employee_type',
+                    'workUnit:id,work_unit'
+                ]);
 
-                // Search berdasarkan nama atau NIP
-                if ($request->filled('search')) {
-                    $search = $request->query('search');
-                    $query->where(function ($q) use ($search) {
-                        $q->where('full_name', 'like', "%{$search}%")
-                          ->orWhere('nip', 'like', "%{$search}%");
+            // Search berdasarkan nama atau NIP
+            if ($request->filled('search')) {
+                $search = $request->query('search');
+                $query->where(function ($q) use ($search) {
+                    $q->where('full_name', 'like', "%{$search}%")
+                      ->orWhere('nip', 'like', "%{$search}%");
+                });
+            }
+
+            // Filter berdasarkan jenis tenaga
+            if ($request->filled('employee_type_id')) {
+                $query->where('employee_type_id', $request->query('employee_type_id'));
+            }
+
+            // Filter berdasarkan unit kerja
+            if ($request->filled('work_unit_id')) {
+                $workUnitId = $request->query('work_unit_id');
+                // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
+                if ($workUnitId === 'All' || $workUnitId === null) {
+                    $query->whereNull('work_unit_id');
+                } else {
+                    // Jika ada unit kerja spesifik, tampilkan karyawan dari unit itu PLUS yang tidak punya unit kerja
+                    $query->where(function ($q) use ($workUnitId) {
+                        $q->where('work_unit_id', $workUnitId)
+                          ->orWhereNull('work_unit_id');
                     });
                 }
+            }
 
-                // Filter berdasarkan jenis tenaga
-                if ($request->filled('employee_type_id')) {
-                    $query->where('employee_type_id', $request->query('employee_type_id'));
-                }
-
-                // Filter berdasarkan unit kerja
-                if ($request->filled('work_unit_id')) {
-                    $workUnitId = $request->query('work_unit_id');
-                    // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
-                    if ($workUnitId === 'All' || $workUnitId === null) {
-                        $query->whereNull('work_unit_id');
-                    } else {
-                        // Jika ada unit kerja spesifik, tampilkan karyawan dari unit itu PLUS yang tidak punya unit kerja
-                        $query->where(function ($q) use ($workUnitId) {
-                            $q->where('work_unit_id', $workUnitId)
-                              ->orWhereNull('work_unit_id');
-                        });
-                    }
-                }
-
-                $perPage = (int) $request->query('per_page', 25);
-                return $query->latest()->paginate($perPage);
-            });
+            $perPage = (int) $request->query('per_page', 25);
+            $result = $query->latest()->paginate($perPage);
 
             return response()->json([
                 'message' => 'Employees fetched successfully',
@@ -207,11 +204,7 @@ class EmployeeController extends Controller
                 ], 404);
             }
 
-            // Delete signature file if exists
-            if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
-                Storage::disk('public')->delete($result->signature_path);
-            }
-
+            // Soft delete — file signature tetap tersimpan agar bisa di-restore
             $result->delete();
 
             $this->clearEmployeeCache();

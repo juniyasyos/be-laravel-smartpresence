@@ -36,7 +36,7 @@ class UserController extends Controller
                 $query->where('role_id', $request->query('role_id'));
             }
 
-            $perPage = $request->query('per_page', 10);
+            $perPage = $request->query('per_page', 25);
             $result = $query->latest()->paginate($perPage);
 
             return response()->json([
@@ -162,18 +162,10 @@ class UserController extends Controller
                 ], 403);
             }
 
-            // Nullify semua referensi user di tabel terkait
-            // agar data rapat, assignment, dokumen tetap ada
-            $result->meetingsCreated()->update(['created_by' => null]);
-            $result->meetingAssignments()->update(['user_id' => null]);
-            $result->meetingAssignedBy()->update(['assigned_by' => null]);
-            $result->attendancesVerified()->update(['verified_by' => null]);
-            $result->meetingDocuments()->update(['uploaded_by' => null]);
-
-            // Revoke semua API tokens (Sanctum)
+            // Revoke semua API tokens (Sanctum) agar tidak bisa login lagi
             $result->tokens()->delete();
 
-            // Hapus user
+            // Soft delete — data relasi tetap tersimpan agar bisa di-restore
             $result->delete();
 
             return response()->json([
