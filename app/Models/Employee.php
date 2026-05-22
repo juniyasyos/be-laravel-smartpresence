@@ -27,7 +27,7 @@ class Employee extends Model
     public function getSignatureUrlAttribute()
     {
         return $this->signature_path
-            ? asset('storage/' . $this->signature_path)
+            ? '/storage/' . $this->signature_path
             : null;
     }
 
