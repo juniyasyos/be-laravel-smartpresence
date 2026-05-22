@@ -154,7 +154,7 @@ class LaporanController extends Controller
                     'file_name' => $doc->file_name,
                     'file_size' => $doc->file_size,
                     'mime_type' => $doc->mime_type,
-                    'url'       => asset('storage/' . $doc->file_path),
+                    'url'       => '/storage/' . $doc->file_path,
                     'created_at' => $doc->created_at,
                 ];
             });
@@ -251,7 +251,7 @@ class LaporanController extends Controller
                     'type'      => $doc->type,
                     'file_name' => $doc->file_name,
                     'mime_type' => $doc->mime_type,
-                    'url'       => asset('storage/' . $doc->file_path),
+                    'url'       => '/storage/' . $doc->file_path,
                 ];
             });
 

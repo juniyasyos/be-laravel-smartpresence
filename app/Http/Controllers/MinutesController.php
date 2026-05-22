@@ -110,7 +110,7 @@ class MinutesController extends Controller
             ]);
 
             $path = $request->file('image')->store('minutes/images', 'public');
-            $url  = asset('storage/' . $path);
+            $url  = '/storage/' . $path;
 
             return response()->json(['url' => $url], 200);
         } catch (Exception $e) {
@@ -162,7 +162,7 @@ class MinutesController extends Controller
             return response()->json([
                 'message' => 'Document uploaded successfully',
                 'data'    => array_merge($document->toArray(), [
-                    'url' => asset('storage/' . $path),
+                    'url' => '/storage/' . $path,
                 ]),
             ], 201);
         } catch (Exception $e) {
