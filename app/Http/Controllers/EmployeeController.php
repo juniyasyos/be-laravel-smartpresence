@@ -53,11 +53,8 @@ class EmployeeController extends Controller
                 if ($workUnitId === 'All' || $workUnitId === null) {
                     $query->whereNull('work_unit_id');
                 } else {
-                    // Jika ada unit kerja spesifik, tampilkan karyawan dari unit itu PLUS yang tidak punya unit kerja
-                    $query->where(function ($q) use ($workUnitId) {
-                        $q->where('work_unit_id', $workUnitId)
-                          ->orWhereNull('work_unit_id');
-                    });
+                    // Jika ada unit kerja spesifik, tampilkan hanya karyawan dari unit itu
+                    $query->where('work_unit_id', $workUnitId);
                 }
             }
 
