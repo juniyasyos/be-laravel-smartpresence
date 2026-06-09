@@ -56,12 +56,8 @@ class StoreMeetingRequest extends FormRequest
             $startTime = $this->input('start_time');
             $endTime   = $this->input('end_time');
 
-            // Check if start time is in the past
-            $startCarbon = \Carbon\Carbon::parse($startTime, 'Asia/Jakarta')->startOfMinute();
-            $now = \Carbon\Carbon::now('Asia/Jakarta')->startOfMinute();
-            if ($startCarbon->lt($now)) {
-                $validator->errors()->add('start_time', 'Tanggal dan waktu rapat tidak boleh sudah terlewati.');
-            }
+            // Removed: Check if start time is in the past
+            // (User requested to allow scheduling meetings even if the date has passed)
 
             $conflict = Meeting::where('room_id', $roomId)
                 ->where('status', '!=', 'dibatalkan') // Do not exclude selesai, to prevent overlap with past finalized meetings

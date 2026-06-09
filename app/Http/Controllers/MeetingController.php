@@ -10,6 +10,7 @@ use App\Http\Requests\StoreMeetingRequest;
 use App\Http\Requests\UpdateMeetingRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class MeetingController extends Controller
@@ -30,7 +31,7 @@ class MeetingController extends Controller
             // Auto-update statuses before listing
             $this->autoUpdateStatuses();
 
-            $query = Meeting::with(['room', 'participants.employee.workUnit']);
+            $query = Meeting::with(['room:id,name,location'])->withCount('participants');
 
             // Search berdasarkan judul
             if ($request->filled('search')) {
@@ -62,7 +63,7 @@ class MeetingController extends Controller
 
             // Append participant count
             $result->getCollection()->transform(function ($meeting) {
-                $meeting->participant_count = $meeting->participants->count();
+                $meeting->participant_count = $meeting->participants_count;
                 return $meeting;
             });
 
@@ -100,16 +101,21 @@ class MeetingController extends Controller
             // Collect participant employee IDs
             $employeeIds = $this->resolveParticipantIds($validated);
 
-            // Create participants
-            foreach ($employeeIds as $employeeId) {
-                MeetingParticipant::create([
+            // Create participants in bulk
+            $participants = array_map(function ($employeeId) use ($meeting) {
+                return [
                     'meeting_id'  => $meeting->id,
                     'employee_id' => $employeeId,
-                ]);
-            }
+                    'created_at'  => now(),
+                ];
+            }, $employeeIds);
+
+            MeetingParticipant::insert($participants);
 
             $meeting->load(['room', 'participants.employee.workUnit']);
             $meeting->participant_count = $meeting->participants->count();
+
+
 
             return response()->json([
                 'message' => 'Meeting created successfully',
@@ -133,9 +139,10 @@ class MeetingController extends Controller
             $this->autoUpdateStatuses($id);
 
             $meeting = Meeting::with([
-                'room',
-                'participants.employee.workUnit',
-                'attendances.employee',
+                'room:id,name,location',
+                'participants.employee:id,full_name,nip,work_unit_id',
+                'participants.employee.workUnit:id,work_unit',
+                'attendances:id,meeting_id,employee_id,check_in_time,status',
             ])->find($id);
 
             if (!$meeting) {
@@ -144,11 +151,12 @@ class MeetingController extends Controller
                 ], 404);
             }
 
+            // Create a hash map for attendances O(1) lookup
+            $attendancesMap = $meeting->attendances->keyBy('employee_id');
+
             // Build participant list with attendance status
-            $participantsWithAttendance = $meeting->participants->map(function ($participant) use ($meeting) {
-                $attendance = $meeting->attendances
-                    ->where('employee_id', $participant->employee_id)
-                    ->first();
+            $participantsWithAttendance = $meeting->participants->map(function ($participant) use ($attendancesMap) {
+                $attendance = $attendancesMap->get($participant->employee_id);
 
                 return [
                     'id'            => $participant->id,
@@ -169,18 +177,20 @@ class MeetingController extends Controller
             if ($request->filled('search')) {
                 $search = strtolower($request->query('search'));
                 $participantsWithAttendance = $participantsWithAttendance->filter(function ($item) use ($search) {
-                    $name = $item['employee']->name ?? '';
+                    $name = $item['employee']->full_name ?? '';
                     return str_contains(strtolower($name), $search);
                 });
             }
 
+            $responseData = [
+                'meeting'                    => $meeting,
+                'participants_with_attendance' => $participantsWithAttendance->values(),
+                'attendance_summary'          => $attendanceSummary,
+            ];
+
             return response()->json([
                 'message' => 'Meeting fetched successfully',
-                'data'    => [
-                    'meeting'                    => $meeting,
-                    'participants_with_attendance' => $participantsWithAttendance->values(),
-                    'attendance_summary'          => $attendanceSummary,
-                ],
+                'data'    => $responseData,
             ], 200);
         } catch (Exception $e) {
             return response()->json([
@@ -225,20 +235,25 @@ class MeetingController extends Controller
             if ($hasParticipantChanges && $meeting->status !== 'berlangsung') {
                 $employeeIds = $this->resolveParticipantIds($validated);
 
-                // Remove old participants (only those not yet attended)
+                // Remove old participants
                 $meeting->participants()->delete();
 
-                // Re-create participants
-                foreach ($employeeIds as $employeeId) {
-                    MeetingParticipant::create([
+                // Re-create participants in bulk
+                $participants = array_map(function ($employeeId) use ($meeting) {
+                    return [
                         'meeting_id'  => $meeting->id,
                         'employee_id' => $employeeId,
-                    ]);
-                }
+                        'created_at'  => now(),
+                    ];
+                }, $employeeIds);
+
+                MeetingParticipant::insert($participants);
             }
 
             $meeting->load(['room', 'participants.employee.workUnit']);
             $meeting->participant_count = $meeting->participants->count();
+
+
 
             return response()->json([
                 'message' => 'Meeting updated successfully',
@@ -265,9 +280,7 @@ class MeetingController extends Controller
                 ], 404);
             }
 
-            // Delete related data
-            $meeting->attendances()->delete();
-            $meeting->participants()->delete();
+            // Soft delete — data relasi tetap tersimpan agar bisa di-restore
             $meeting->delete();
 
             return response()->json([
@@ -344,6 +357,8 @@ class MeetingController extends Controller
 
             $employee->load(['workUnit']);
 
+
+
             return response()->json([
                 'message' => 'Absensi berhasil dicatat',
                 'data'    => [
@@ -401,6 +416,8 @@ class MeetingController extends Controller
                 
                 $participant->load(['employee.workUnit']);
                 
+
+                
                 return response()->json([
                     'message' => 'Status kehadiran berhasil diubah menjadi tidak hadir',
                     'data'    => [
@@ -428,6 +445,8 @@ class MeetingController extends Controller
             ]);
 
             $participant->load(['employee.workUnit']);
+
+
 
             return response()->json([
                 'message' => 'Absensi manual berhasil dicatat',
@@ -498,28 +517,48 @@ class MeetingController extends Controller
     {
         $now = Carbon::now();
 
-        $query = Meeting::where('status', '!=', 'dibatalkan');
-
         if ($meetingId) {
-            $query->where('id', $meetingId);
+            $meeting = Meeting::where('status', '!=', 'dibatalkan')->find($meetingId);
+            if ($meeting) {
+                $newStatus = $meeting->status;
+                if ($now->greaterThan($meeting->end_time)) {
+                    $newStatus = 'selesai';
+                } elseif ($now->greaterThanOrEqualTo($meeting->start_time) && $now->lessThanOrEqualTo($meeting->end_time)) {
+                    $newStatus = 'berlangsung';
+                } else {
+                    $newStatus = 'menunggu';
+                }
+
+                if ($newStatus !== $meeting->status) {
+                    $meeting->update(['status' => $newStatus]);
+                }
+            }
+            return;
         }
 
-        $meetings = $query->get();
-
-        foreach ($meetings as $meeting) {
-            $newStatus = $meeting->status;
-
-            if ($now->greaterThan($meeting->end_time)) {
-                $newStatus = 'selesai';
-            } elseif ($now->greaterThanOrEqualTo($meeting->start_time) && $now->lessThanOrEqualTo($meeting->end_time)) {
-                $newStatus = 'berlangsung';
-            } else {
-                $newStatus = 'menunggu';
-            }
-
-            if ($newStatus !== $meeting->status) {
-                $meeting->update(['status' => $newStatus]);
-            }
+        // Use a simple cache lock for batch updates
+        $lockKey = 'auto_update_batch_statuses_' . floor(time() / 60);
+        if (Cache::has($lockKey)) {
+            return;
         }
+
+        // Batch update
+        Meeting::where('status', '!=', 'dibatalkan')
+            ->where('status', '!=', 'selesai')
+            ->where('end_time', '<', $now)
+            ->update(['status' => 'selesai']);
+
+        Meeting::where('status', '!=', 'dibatalkan')
+            ->where('status', '!=', 'berlangsung')
+            ->where('start_time', '<=', $now)
+            ->where('end_time', '>=', $now)
+            ->update(['status' => 'berlangsung']);
+
+        Meeting::where('status', '!=', 'dibatalkan')
+            ->where('status', '!=', 'menunggu')
+            ->where('start_time', '>', $now)
+            ->update(['status' => 'menunggu']);
+
+        Cache::put($lockKey, true, 60);
     }
 }

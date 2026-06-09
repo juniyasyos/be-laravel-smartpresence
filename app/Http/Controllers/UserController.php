@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Role;
-use App\Http\Requests\storeUserRequest;
-use App\Http\Requests\updateUserRequest;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class UserController extends Controller
@@ -35,7 +36,7 @@ class UserController extends Controller
                 $query->where('role_id', $request->query('role_id'));
             }
 
-            $perPage = $request->query('per_page', 10);
+            $perPage = $request->query('per_page', 25);
             $result = $query->latest()->paginate($perPage);
 
             return response()->json([
@@ -53,7 +54,7 @@ class UserController extends Controller
     /**
      * Tambah pengguna baru.
      */
-    public function store(storeUserRequest $request)
+    public function store(StoreUserRequest $request)
     {
         try {
             $validated = $request->validated();
@@ -101,7 +102,7 @@ class UserController extends Controller
     /**
      * Update pengguna.
      */
-    public function update(updateUserRequest $request, string $id)
+    public function update(UpdateUserRequest $request, string $id)
     {
         try {
             $result = User::find($id);
@@ -141,6 +142,8 @@ class UserController extends Controller
 
     /**
      * Hapus pengguna.
+     * Data terkait (rapat, assignment, dokumen) tetap tersimpan,
+     * hanya referensi user-nya yang di-null-kan.
      */
     public function destroy(string $id)
     {
@@ -152,12 +155,17 @@ class UserController extends Controller
                 ], 404);
             }
 
+            // Hanya super_admin yang tidak bisa dihapus
             if ($result->role_id === 1) {
                 return response()->json([
                     'message' => 'Super Admin tidak dapat dihapus',
                 ], 403);
             }
 
+            // Revoke semua API tokens (Sanctum) agar tidak bisa login lagi
+            $result->tokens()->delete();
+
+            // Soft delete — data relasi tetap tersimpan agar bisa di-restore
             $result->delete();
 
             return response()->json([
@@ -177,7 +185,9 @@ class UserController extends Controller
     public function roles()
     {
         try {
-            $result = Role::all();
+            $result = Cache::rememberForever('roles', function () {
+                return Role::all();
+            });
             return response()->json([
                 'message' => 'Roles fetched successfully',
                 'data' => $result,

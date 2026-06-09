@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
 {
+    use SoftDeletes;
     protected $fillable = [
         'full_name',
         'nip',
@@ -16,6 +18,18 @@ class Employee extends Model
         'signature_path',
         'is_active'
     ];
+
+    protected $appends = ['signature_url'];
+
+    /**
+     * Accessor untuk mendapatkan URL tanda tangan.
+     */
+    public function getSignatureUrlAttribute()
+    {
+        return $this->signature_path
+            ? '/storage/' . $this->signature_path
+            : null;
+    }
 
     public function attendances()
     {

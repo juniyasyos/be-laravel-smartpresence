@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\MeetingRoom;
-use App\Http\Requests\storeMeetingRoomRequest;
-use App\Http\Requests\updateMeetingRoomRequest;
+use App\Http\Requests\StoreMeetingRoomRequest;
+use App\Http\Requests\UpdateMeetingRoomRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class MeetingsRoomController extends Controller
@@ -20,7 +21,7 @@ class MeetingsRoomController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = MeetingRoom::query();
+            $query = MeetingRoom::select('id', 'name', 'location', 'capacity', 'is_active');
 
             // Search berdasarkan nama atau lokasi
             if ($request->filled('search')) {
@@ -31,7 +32,7 @@ class MeetingsRoomController extends Controller
                 });
             }
 
-            $perPage = $request->query('per_page', 10);
+            $perPage = (int) $request->query('per_page', 10);
             $result = $query->latest()->paginate($perPage);
 
             return response()->json([
@@ -49,11 +50,13 @@ class MeetingsRoomController extends Controller
     /**
      * Tambah ruang rapat baru.
      */
-    public function store(storeMeetingRoomRequest $request)
+    public function store(StoreMeetingRoomRequest $request)
     {
         try {
             $validated = $request->validated();
             $result = MeetingRoom::create($validated);
+            
+            Cache::forget('meeting_rooms_all');
 
             return response()->json([
                 'message' => 'Meeting room created successfully',
@@ -95,7 +98,7 @@ class MeetingsRoomController extends Controller
     /**
      * Update ruang rapat.
      */
-    public function update(updateMeetingRoomRequest $request, string $id)
+    public function update(UpdateMeetingRoomRequest $request, string $id)
     {
         try {
             $result = MeetingRoom::find($id);
@@ -107,6 +110,8 @@ class MeetingsRoomController extends Controller
 
             $validated = $request->validated();
             $result->update($validated);
+
+            Cache::forget('meeting_rooms_all');
 
             return response()->json([
                 'message' => 'Meeting room updated successfully',
@@ -135,6 +140,8 @@ class MeetingsRoomController extends Controller
 
             $result->update(['is_active' => !$result->is_active]);
 
+            Cache::forget('meeting_rooms_all');
+
             return response()->json([
                 'message' => 'Meeting room status updated successfully',
                 'data' => $result,
@@ -153,14 +160,17 @@ class MeetingsRoomController extends Controller
     public function destroy(string $id)
     {
         try {
-            $result = MeetingRoom::find($id);
+            $result = MeetingRoom::withCount('meetings')->find($id);
             if (!$result) {
                 return response()->json([
                     'message' => 'Meeting room not found',
                 ], 404);
             }
 
+            // Soft delete
             $result->delete();
+
+            Cache::forget('meeting_rooms_all');
 
             return response()->json([
                 'message' => 'Meeting room deleted successfully',

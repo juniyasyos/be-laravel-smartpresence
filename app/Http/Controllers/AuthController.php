@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Http\Requests\storeAuthRequest;
+use App\Http\Requests\StoreAuthRequest;
 
 
 class AuthController extends Controller
 {
-    public function login(storeAuthRequest $request)
+    public function login(StoreAuthRequest $request)
     {
         $request->validated();
         

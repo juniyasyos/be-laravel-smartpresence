@@ -3,23 +3,23 @@
 namespace App\Exports;
 
 use App\Models\Employee;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromQuery;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class EmployeesExport implements FromCollection, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class EmployeesExport implements FromQuery, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
 {
     private $rowNumber = 0;
 
     /**
-    * @return \Illuminate\Support\Collection
+    * @return \Illuminate\Database\Eloquent\Builder
     */
-    public function collection()
+    public function query()
     {
-        return Employee::with(['employeeType', 'workUnit'])->latest()->get();
+        return Employee::query()->with(['employeeType', 'workUnit'])->latest();
     }
 
     public function headings(): array

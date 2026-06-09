@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\storeEmployeeRequest;
-use App\Http\Requests\updateEmployeeRequest;
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Models\EmployeeType;
 use App\Models\WorkUnit;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Cache;
 use Exception;
 
 class EmployeeController extends Controller
@@ -24,7 +26,11 @@ class EmployeeController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = Employee::with(['employeeType', 'workUnit']);
+            $query = Employee::select('id', 'full_name', 'nip', 'employee_type_id', 'work_unit_id', 'phone', 'email', 'signature_path')
+                ->with([
+                    'employeeType:id,employee_type',
+                    'workUnit:id,work_unit'
+                ]);
 
             // Search berdasarkan nama atau NIP
             if ($request->filled('search')) {
@@ -42,10 +48,17 @@ class EmployeeController extends Controller
 
             // Filter berdasarkan unit kerja
             if ($request->filled('work_unit_id')) {
-                $query->where('work_unit_id', $request->query('work_unit_id'));
+                $workUnitId = $request->query('work_unit_id');
+                // Jika work_unit_id null atau "none", tampilkan hanya karyawan tanpa unit kerja
+                if ($workUnitId === 'All' || $workUnitId === null) {
+                    $query->whereNull('work_unit_id');
+                } else {
+                    // Jika ada unit kerja spesifik, tampilkan hanya karyawan dari unit itu
+                    $query->where('work_unit_id', $workUnitId);
+                }
             }
 
-            $perPage = $request->query('per_page', 10);
+            $perPage = (int) $request->query('per_page', 25);
             $result = $query->latest()->paginate($perPage);
 
             return response()->json([
@@ -63,12 +76,24 @@ class EmployeeController extends Controller
     /**
      * Tambah karyawan baru.
      */
-    public function store(storeEmployeeRequest $request)
+    public function store(StoreEmployeeRequest $request)
     {
         try {
             $validated = $request->validated();
+
+            // Handle signature file upload
+            if ($request->hasFile('signature')) {
+                $path = $request->file('signature')->store('signatures', 'public');
+                $validated['signature_path'] = $path;
+            }
+
+            // Remove signature file object from validated data to keep it clean
+            unset($validated['signature']);
+
             $result = Employee::create($validated);
             $result->load(['employeeType', 'workUnit']);
+
+            $this->clearEmployeeCache();
 
             return response()->json([
                 'message' => 'Employee created successfully',
@@ -88,7 +113,10 @@ class EmployeeController extends Controller
     public function show(string $id)
     {
         try {
-            $result = Employee::with(['employeeType', 'workUnit'])->find($id);
+            $cacheKey = 'employees_show_' . $id;
+            $result = Cache::remember($cacheKey, 3600, function () use ($id) {
+                return Employee::with(['employeeType', 'workUnit'])->find($id);
+            });
             if (!$result) {
                 return response()->json([
                     'message' => 'Employee not found',
@@ -110,7 +138,7 @@ class EmployeeController extends Controller
     /**
      * Update data karyawan.
      */
-    public function update(updateEmployeeRequest $request, string $id)
+    public function update(UpdateEmployeeRequest $request, string $id)
     {
         try {
             $result = Employee::find($id);
@@ -121,8 +149,32 @@ class EmployeeController extends Controller
             }
 
             $validated = $request->validated();
+
+            // Handle signature file upload
+            if ($request->hasFile('signature')) {
+                // Delete old signature if exists
+                if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
+                    Storage::disk('public')->delete($result->signature_path);
+                }
+                $path = $request->file('signature')->store('signatures', 'public');
+                $validated['signature_path'] = $path;
+            }
+
+            // Handle signature removal (when client sends remove_signature = true)
+            if ($request->boolean('remove_signature')) {
+                if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
+                    Storage::disk('public')->delete($result->signature_path);
+                }
+                $validated['signature_path'] = null;
+            }
+
+            // Remove signature and remove_signature from validated data before update
+            unset($validated['signature'], $validated['remove_signature']);
+
             $result->update($validated);
             $result->load(['employeeType', 'workUnit']);
+
+            $this->clearEmployeeCache();
 
             return response()->json([
                 'message' => 'Employee updated successfully',
@@ -149,7 +201,10 @@ class EmployeeController extends Controller
                 ], 404);
             }
 
+            // Soft delete — file signature tetap tersimpan agar bisa di-restore
             $result->delete();
+
+            $this->clearEmployeeCache();
 
             return response()->json([
                 'message' => 'Employee deleted successfully',
@@ -168,7 +223,9 @@ class EmployeeController extends Controller
     public function employeeTypes()
     {
         try {
-            $result = EmployeeType::all();
+            $result = Cache::rememberForever('employee_types', function () {
+                return EmployeeType::select('id', 'employee_type')->get();
+            });
             return response()->json([
                 'message' => 'Employee types fetched successfully',
                 'data' => $result,
@@ -187,7 +244,18 @@ class EmployeeController extends Controller
     public function workUnits()
     {
         try {
-            $result = WorkUnit::all();
+            $result = Cache::rememberForever('work_units', function () {
+                $units = WorkUnit::select('id', 'work_unit')->get();
+                
+                // Tambahkan opsi "none" untuk karyawan tanpa unit kerja
+                $noneOption = (object)[
+                    'id' => null,
+                    'work_unit' => 'none',
+                ];
+                
+                return collect($units)->prepend($noneOption);
+            });
+            
             return response()->json([
                 'message' => 'Work units fetched successfully',
                 'data' => $result,
@@ -198,5 +266,14 @@ class EmployeeController extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Clear all employee-related cache keys.
+     */
+    private function clearEmployeeCache(): void
+    {
+        Cache::forget('employee_types');
+        Cache::forget('work_units');
     }
 }

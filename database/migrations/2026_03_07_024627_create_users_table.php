@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('role_id')->constrained('roles');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

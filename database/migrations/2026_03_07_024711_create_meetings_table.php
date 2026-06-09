@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('status',20)->default('menunggu');
             $table->foreignId('created_by')->constrained('users');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

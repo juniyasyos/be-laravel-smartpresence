@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class MeetingAssignment extends Model
 {
-    //
-protected $fillable = ['meeting_id', 'user_id', 'assigned_by'];
+    const UPDATED_AT = null;
+
+    protected $fillable = ['meeting_id', 'user_id', 'assigned_by'];
 
 public function meeting()
 {
