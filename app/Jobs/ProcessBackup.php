@@ -52,15 +52,19 @@ class ProcessBackup implements ShouldQueue
                 mkdir($backupDir, 0755, true);
             }
 
-            // We only do database backup regardless of type, because files are on S3.
-            $localFilePath = $this->backupDatabase($backupDir, $backup);
+            $localFilePath = match ($backup->type) {
+                'database' => $this->backupDatabase($backupDir, $backup),
+                'files'    => $this->backupFiles($backupDir, $backup),
+                'full'     => $this->backupFull($backupDir, $backup),
+            };
 
+            // Upload ZIP to S3
             $s3Path = 'backups/' . $backup->name;
             Storage::put($s3Path, file_get_contents($localFilePath));
-            
+
             // Cleanup local temp files
             @unlink($localFilePath);
-            @rmdir($backupDir);
+            $this->cleanupTempDir($backupDir);
 
             $fileSize = Storage::size($s3Path);
 
@@ -148,5 +152,138 @@ class ProcessBackup implements ShouldQueue
         @unlink($sqlFile);
 
         return $zipFile;
+    }
+
+    /**
+     * Backup storage files from S3 (MinIO).
+     * Downloads all files from the S3 bucket and packages them into a ZIP.
+     */
+    protected function backupFiles(string $backupDir, BackupLog $backup): string
+    {
+        $zipFile = $backupDir . '/' . $backup->name;
+
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \RuntimeException('Failed to create ZIP archive');
+        }
+
+        $this->addS3FilesToZip($zip, 'storage');
+        $zip->close();
+
+        return $zipFile;
+    }
+
+    /**
+     * Backup both database and S3 files.
+     */
+    protected function backupFull(string $backupDir, BackupLog $backup): string
+    {
+        $zipFile = $backupDir . '/' . $backup->name;
+        $sqlFile = $backupDir . '/temp_db_' . $backup->id . '.sql';
+
+        // 1. Dump database
+        $host     = config('database.connections.mysql.host');
+        $port     = config('database.connections.mysql.port', '3306');
+        $database = config('database.connections.mysql.database');
+        $username = config('database.connections.mysql.username');
+        $password = config('database.connections.mysql.password');
+
+        $command = [
+            'mysqldump',
+            '--host=' . $host,
+            '--port=' . $port,
+            '--user=' . $username,
+            '--password=' . $password,
+            '--skip-ssl',
+            '--no-tablespaces',
+            '--single-transaction',
+            '--routines',
+            '--triggers',
+            '--add-drop-table',
+            $database,
+        ];
+
+        $process = new Process($command);
+        $process->setTimeout(600);
+
+        $output = '';
+        $process->run(function ($type, $buffer) use (&$output) {
+            if ($type === Process::OUT) {
+                $output .= $buffer;
+            }
+        });
+
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException('mysqldump failed: ' . $process->getErrorOutput());
+        }
+
+        file_put_contents($sqlFile, $output);
+
+        // 2. Create ZIP with both DB dump and S3 files
+        $zip = new ZipArchive();
+        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            throw new \RuntimeException('Failed to create ZIP archive');
+        }
+
+        // Add SQL dump
+        $zip->addFile($sqlFile, 'database/' . $database . '_dump.sql');
+
+        // Add S3 storage files
+        $this->addS3FilesToZip($zip, 'storage');
+
+        $zip->close();
+
+        // Clean up temp SQL file
+        @unlink($sqlFile);
+
+        return $zipFile;
+    }
+
+    /**
+     * Download all files from S3 (MinIO) and add them to a ZIP archive.
+     * Excludes the 'backups/' folder to avoid recursive backup.
+     */
+    protected function addS3FilesToZip(ZipArchive $zip, string $zipPrefix): void
+    {
+        $allFiles = Storage::allFiles();
+
+        foreach ($allFiles as $file) {
+            // Skip backup files to avoid recursive backup
+            if (str_starts_with($file, 'backups/') || str_starts_with($file, 'backups\\')) {
+                continue;
+            }
+
+            try {
+                $contents = Storage::get($file);
+                if ($contents !== null) {
+                    $zip->addFromString($zipPrefix . '/' . $file, $contents);
+                }
+            } catch (\Throwable $e) {
+                Log::warning("Backup: skipping file {$file}: {$e->getMessage()}");
+            }
+        }
+    }
+
+    /**
+     * Recursively remove a temporary directory.
+     */
+    protected function cleanupTempDir(string $dir): void
+    {
+        if (!is_dir($dir)) return;
+
+        $files = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($files as $file) {
+            if ($file->isDir()) {
+                @rmdir($file->getPathname());
+            } else {
+                @unlink($file->getPathname());
+            }
+        }
+
+        @rmdir($dir);
     }
 }

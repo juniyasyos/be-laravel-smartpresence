@@ -24,10 +24,10 @@ class SystemSettingController extends Controller
             return response()->json([
                 'message' => 'Logos fetched successfully',
                 'data' => [
-                    'logo_kiri_sidebar' => $logoKiriSidebar ? asset('storage/' . $logoKiriSidebar) : null,
-                    'logo_kiri_pdf'     => $logoKiriPdf ? asset('storage/' . $logoKiriPdf) : null,
-                    'logo_kanan_pdf'    => $logoKananPdf ? asset('storage/' . $logoKananPdf) : null,
-                    'stamp_image'       => $stampImage ? asset('storage/' . $stampImage) : null,
+                    'logo_kiri_sidebar' => $logoKiriSidebar ? Storage::url($logoKiriSidebar) : null,
+                    'logo_kiri_pdf'     => $logoKiriPdf ? Storage::url($logoKiriPdf) : null,
+                    'logo_kanan_pdf'    => $logoKananPdf ? Storage::url($logoKananPdf) : null,
+                    'stamp_image'       => $stampImage ? Storage::url($stampImage) : null,
                 ]
             ], 200);
         } catch (Exception $e) {
@@ -84,7 +84,7 @@ class SystemSettingController extends Controller
                 'message' => 'Logo berhasil diperbarui',
                 'data' => [
                     'key' => $type,
-                    'url' => asset('storage/' . $newPath)
+                    'url' => Storage::url($newPath)
                 ]
             ], 200);
 
