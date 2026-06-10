@@ -83,7 +83,7 @@ class EmployeeController extends Controller
 
             // Handle signature file upload
             if ($request->hasFile('signature')) {
-                $path = $request->file('signature')->store('signatures', 'public');
+                $path = $request->file('signature')->store('signatures');
                 $validated['signature_path'] = $path;
             }
 
@@ -153,17 +153,17 @@ class EmployeeController extends Controller
             // Handle signature file upload
             if ($request->hasFile('signature')) {
                 // Delete old signature if exists
-                if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
-                    Storage::disk('public')->delete($result->signature_path);
+                if ($result->signature_path && Storage::exists($result->signature_path)) {
+                    Storage::delete($result->signature_path);
                 }
-                $path = $request->file('signature')->store('signatures', 'public');
+                $path = $request->file('signature')->store('signatures');
                 $validated['signature_path'] = $path;
             }
 
             // Handle signature removal (when client sends remove_signature = true)
             if ($request->boolean('remove_signature')) {
-                if ($result->signature_path && Storage::disk('public')->exists($result->signature_path)) {
-                    Storage::disk('public')->delete($result->signature_path);
+                if ($result->signature_path && Storage::exists($result->signature_path)) {
+                    Storage::delete($result->signature_path);
                 }
                 $validated['signature_path'] = null;
             }

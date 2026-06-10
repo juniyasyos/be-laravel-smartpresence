@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Employee extends Model
@@ -27,7 +28,7 @@ class Employee extends Model
     public function getSignatureUrlAttribute()
     {
         return $this->signature_path
-            ? '/storage/' . $this->signature_path
+            ? Storage::url($this->signature_path)
             : null;
     }
 

@@ -109,8 +109,8 @@ class MinutesController extends Controller
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // max 5MB
             ]);
 
-            $path = $request->file('image')->store('minutes/images', 'public');
-            $url  = '/storage/' . $path;
+            $path = $request->file('image')->store('minutes/images');
+            $url  = Storage::url($path);
 
             return response()->json(['url' => $url], 200);
         } catch (Exception $e) {
@@ -145,7 +145,7 @@ class MinutesController extends Controller
             ]);
 
             $uploadedFile = $request->file('file');
-            $path         = $uploadedFile->store('meetings/documents', 'public');
+            $path         = $uploadedFile->store('meetings/documents');
 
             $document = MeetingDocument::create([
                 'meeting_id' => $meetingId,
@@ -162,7 +162,7 @@ class MinutesController extends Controller
             return response()->json([
                 'message' => 'Document uploaded successfully',
                 'data'    => array_merge($document->toArray(), [
-                    'url' => '/storage/' . $path,
+                    'url' => Storage::url($path),
                 ]),
             ], 201);
         } catch (Exception $e) {

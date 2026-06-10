@@ -23,8 +23,6 @@ COPY . .
 
 RUN composer install --no-interaction --prefer-dist
 
-RUN php artisan storage:link
-
 EXPOSE 9000
 
 CMD ["php-fpm"]

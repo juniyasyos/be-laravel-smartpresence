@@ -63,8 +63,8 @@ class SystemSettingController extends Controller
 
             // 3. Hapus file lama jika ada
             $oldPath = SystemSetting::where('key', $type)->value('value');
-            if ($oldPath && Storage::disk('public')->exists($oldPath)) {
-                Storage::disk('public')->delete($oldPath);
+            if ($oldPath && Storage::exists($oldPath)) {
+                Storage::delete($oldPath);
             }
 
             // 4. Simpan file baru dengan nama unik (timestamp) untuk mencegah caching browser
@@ -72,7 +72,7 @@ class SystemSettingController extends Controller
             $filename = "{$type}_" . time() . ".{$extension}";
             
             // Simpan di subfolder 'logos' dalam disk public
-            $newPath = Storage::disk('public')->putFileAs('logos', $file, $filename);
+            $newPath = Storage::putFileAs('logos', $file, $filename);
 
             // 5. Update data di database
             $setting = SystemSetting::updateOrCreate(

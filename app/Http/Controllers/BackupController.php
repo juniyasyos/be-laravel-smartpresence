@@ -7,6 +7,7 @@ use App\Jobs\ProcessBackup;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class BackupController extends Controller
 {
@@ -141,13 +142,13 @@ class BackupController extends Controller
             ], 404);
         }
 
-        if (!file_exists($backup->file_path)) {
+        if (!Storage::exists($backup->file_path)) {
             return response()->json([
                 'message' => 'File backup tidak ditemukan di server.',
             ], 404);
         }
 
-        return response()->download($backup->file_path, $backup->name);
+        return Storage::download($backup->file_path, $backup->name);
     }
 
     /**
@@ -161,8 +162,8 @@ class BackupController extends Controller
         $backup = BackupLog::findOrFail($id);
 
         // Delete the file if it exists
-        if ($backup->file_path && file_exists($backup->file_path)) {
-            @unlink($backup->file_path);
+        if ($backup->file_path && Storage::exists($backup->file_path)) {
+            Storage::delete($backup->file_path);
         }
 
         $backup->delete();
@@ -209,8 +210,8 @@ class BackupController extends Controller
         $count = 0;
 
         foreach ($oldBackups as $backup) {
-            if ($backup->file_path && file_exists($backup->file_path)) {
-                @unlink($backup->file_path);
+            if ($backup->file_path && Storage::exists($backup->file_path)) {
+                Storage::delete($backup->file_path);
             }
             $backup->delete();
             $count++;

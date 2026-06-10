@@ -47,22 +47,26 @@ class ProcessBackup implements ShouldQueue
         ]);
 
         try {
-            $backupDir = storage_path('app/backups');
+            $backupDir = sys_get_temp_dir() . '/backups_' . uniqid();
             if (!is_dir($backupDir)) {
                 mkdir($backupDir, 0755, true);
             }
 
-            $filePath = match ($backup->type) {
-                'database' => $this->backupDatabase($backupDir, $backup),
-                'files'    => $this->backupFiles($backupDir, $backup),
-                'full'     => $this->backupFull($backupDir, $backup),
-            };
+            // We only do database backup regardless of type, because files are on S3.
+            $localFilePath = $this->backupDatabase($backupDir, $backup);
 
-            $fileSize = file_exists($filePath) ? filesize($filePath) : 0;
+            $s3Path = 'backups/' . $backup->name;
+            Storage::put($s3Path, file_get_contents($localFilePath));
+            
+            // Cleanup local temp files
+            @unlink($localFilePath);
+            @rmdir($backupDir);
+
+            $fileSize = Storage::size($s3Path);
 
             $backup->update([
                 'status'       => 'completed',
-                'file_path'    => $filePath,
+                'file_path'    => $s3Path,
                 'file_size'    => $fileSize,
                 'completed_at' => now(),
             ]);
@@ -144,123 +148,5 @@ class ProcessBackup implements ShouldQueue
         @unlink($sqlFile);
 
         return $zipFile;
-    }
-
-    /**
-     * Backup storage files.
-     */
-    protected function backupFiles(string $backupDir, BackupLog $backup): string
-    {
-        $zipFile    = $backupDir . '/' . $backup->name;
-        $storageDir = storage_path('app');
-
-        $zip = new ZipArchive();
-        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            throw new \RuntimeException('Failed to create ZIP archive');
-        }
-
-        $this->addDirectoryToZip($zip, $storageDir, 'storage', ['backups']);
-        $zip->close();
-
-        return $zipFile;
-    }
-
-    /**
-     * Backup both database and files.
-     */
-    protected function backupFull(string $backupDir, BackupLog $backup): string
-    {
-        $zipFile = $backupDir . '/' . $backup->name;
-        $sqlFile = $backupDir . '/temp_db_' . $backup->id . '.sql';
-
-        // 1. Dump database
-        $host     = config('database.connections.mysql.host');
-        $port     = config('database.connections.mysql.port', '3306');
-        $database = config('database.connections.mysql.database');
-        $username = config('database.connections.mysql.username');
-        $password = config('database.connections.mysql.password');
-
-        $command = [
-            'mysqldump',
-            '--host=' . $host,
-            '--port=' . $port,
-            '--user=' . $username,
-            '--password=' . $password,
-            '--skip-ssl',
-            '--no-tablespaces',
-            '--single-transaction',
-            '--routines',
-            '--triggers',
-            '--add-drop-table',
-            $database,
-        ];
-
-        $process = new Process($command);
-        $process->setTimeout(600);
-
-        $output = '';
-        $process->run(function ($type, $buffer) use (&$output) {
-            if ($type === Process::OUT) {
-                $output .= $buffer;
-            }
-        });
-
-        if (!$process->isSuccessful()) {
-            throw new \RuntimeException('mysqldump failed: ' . $process->getErrorOutput());
-        }
-
-        file_put_contents($sqlFile, $output);
-
-        // 2. Create ZIP with both DB dump and storage files
-        $zip = new ZipArchive();
-        if ($zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
-            throw new \RuntimeException('Failed to create ZIP archive');
-        }
-
-        // Add SQL dump
-        $zip->addFile($sqlFile, 'database/' . $database . '_dump.sql');
-
-        // Add storage files
-        $this->addDirectoryToZip($zip, storage_path('app'), 'storage', ['backups']);
-
-        $zip->close();
-
-        // Clean up temp SQL file
-        @unlink($sqlFile);
-
-        return $zipFile;
-    }
-
-    /**
-     * Recursively add a directory to a ZIP archive.
-     */
-    protected function addDirectoryToZip(ZipArchive $zip, string $dir, string $zipPath, array $excludeDirs = []): void
-    {
-        if (!is_dir($dir)) {
-            return;
-        }
-
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
-            \RecursiveIteratorIterator::SELF_FIRST
-        );
-
-        foreach ($iterator as $file) {
-            $filePath     = $file->getPathname();
-            $relativePath = $zipPath . '/' . substr($filePath, strlen($dir) + 1);
-
-            // Skip excluded directories
-            foreach ($excludeDirs as $excludeDir) {
-                if (str_contains($relativePath, $zipPath . '/' . $excludeDir)) {
-                    continue 2;
-                }
-            }
-
-            if ($file->isDir()) {
-                $zip->addEmptyDir($relativePath);
-            } else {
-                $zip->addFile($filePath, $relativePath);
-            }
-        }
     }
 }
