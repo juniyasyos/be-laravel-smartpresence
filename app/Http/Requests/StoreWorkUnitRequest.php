@@ -16,7 +16,7 @@ class StoreWorkUnitRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'work_unit' => 'required|string|max:150|unique:work_units,work_unit',
+            'unit_name' => 'required|string|max:150|unique:work_units,work_unit',
         ];
     }
 

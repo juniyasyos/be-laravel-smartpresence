@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('work_units', function (Blueprint $table) {
             $table->id();
-            $table->string('work_unit', 100);
+            $table->string('unit_name', 100);
+            $table->string('slug', 150)->nullable()->unique();
+            $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

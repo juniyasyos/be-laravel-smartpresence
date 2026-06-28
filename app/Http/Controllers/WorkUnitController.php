@@ -21,13 +21,13 @@ class WorkUnitController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = WorkUnit::select('id', 'work_unit', 'created_at')
+            $query = WorkUnit::select('id', 'unit_name', 'created_at')
                 ->withCount('employees');
 
             // Search berdasarkan nama unit kerja
             if ($request->filled('search')) {
                 $search = $request->query('search');
-                $query->where('work_unit', 'like', "%{$search}%");
+                $query->where('unit_name', 'like', "%{$search}%");
             }
 
             $perPage = (int) $request->query('per_page', 10);

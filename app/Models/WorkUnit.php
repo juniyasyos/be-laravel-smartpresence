@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Juniyasyos\IamClient\Models\UnitKerja;
 
-class WorkUnit extends Model
+class WorkUnit extends UnitKerja
 {
-    protected $fillable = ['work_unit'];
+    protected $table = 'work_units';
 
     public function employees()
     {
