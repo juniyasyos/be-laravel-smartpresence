@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 
-class User extends Authenticatable
+class User extends Authenticatable 
 {
     use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
@@ -24,6 +24,17 @@ class User extends Authenticatable
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    public function syncRoles(array $roles)
+    {
+        $roleIds = [];
+        foreach ($roles as $roleName) {
+            $roleModel = \App\Models\Role::firstOrCreate(['role' => $roleName]);
+            $roleIds[] = $roleModel->id;
+        }
+        
+        $this->roles()->sync($roleIds);
     }
 
     public function meetingsCreated()
@@ -49,5 +60,10 @@ class User extends Authenticatable
     public function meetingDocuments()
     {
         return $this->hasMany(MeetingDocument::class, 'uploaded_by');
+    }
+
+    public function unitKerjas()
+    {
+        return $this->belongsToMany(WorkUnit::class, 'user_unit_kerja', 'user_id', 'unit_kerja_id')->withTimestamps();
     }
 }
