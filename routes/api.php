@@ -18,12 +18,14 @@ use App\Http\Controllers\BackupController;
 use App\Http\Controllers\SystemSettingController;
 
 // ─── Authentication & Public ───────────────────────────────────────────────
+Route::get('/auth/mode', [AuthController::class, 'getAuthMode']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/system-settings/logos', [SystemSettingController::class, 'getLogos']);
 
 // ─── Protected Routes ──────────────────────────────────────────────────────
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/auth/me', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
     // Employees

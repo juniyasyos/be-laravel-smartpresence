@@ -12,6 +12,22 @@ use App\Http\Requests\StoreAuthRequest;
 class AuthController extends Controller
 {
     /**
+     * Get Auth Mode
+     *
+     * Memberikan informasi ke frontend apakah menggunakan SSO (NexaID) atau Local Login.
+     * 
+     * @unauthenticated
+     * @tags Authentication
+     */
+    public function getAuthMode()
+    {
+        return response()->json([
+            'sso_enabled' => config('iam.enabled', false),
+            'sso_login_url' => config('iam.enabled') ? route('iam.sso.login') : null,
+        ]);
+    }
+
+    /**
      * User Login
      *
      * Autentikasi pengguna menggunakan NIP dan password untuk mendapatkan Bearer Token.
@@ -56,6 +72,23 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Login berhasil',
             'token' => $token,
+            'user' => $user
+        ]);
+    }
+
+    /**
+     * Get Authenticated User
+     */
+    public function me(Request $request)
+    {
+        \Illuminate\Support\Facades\Log::info('auth/me request received', [
+            'headers' => $request->headers->all(),
+            'cookies' => $request->cookies->all(),
+            'session_id' => $request->session()->getId(),
+        ]);
+        $user = $request->user();
+        $user->load('roles');
+        return response()->json([
             'user' => $user
         ]);
     }
