@@ -4,25 +4,34 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Requests\StoreAuthRequest;
 
 
 class AuthController extends Controller
 {
+    /**
+     * User Login
+     *
+     * Autentikasi pengguna menggunakan NIP dan password untuk mendapatkan Bearer Token.
+     * 
+     * @unauthenticated
+     */
     public function login(StoreAuthRequest $request)
     {
         $request->validated();
         
-        $user = User::where('username', $request->username)->first();
-
-        if (!$user || $user->password !== $request->password) {
+        if (!Auth::attempt($request->only('nip', 'password'))) {
             return response()->json([
-                'message' => 'Username atau password salah'
+                'message' => 'NIP atau password salah'
             ], 401);
         }
 
-        if (!$user->is_active) {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if ($user->status !== 'active') {
             return response()->json([
                 'message' => 'User tidak aktif'
             ], 403);
@@ -37,6 +46,11 @@ class AuthController extends Controller
         ]);
     }
     
+    /**
+     * User Logout
+     *
+     * Menghapus (revoke) token yang saat ini digunakan, sehingga sesi pengguna berakhir.
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()?->delete();

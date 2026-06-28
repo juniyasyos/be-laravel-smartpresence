@@ -14,9 +14,9 @@ class LoginController extends Controller
     {
         try{
             $result = $request->validated();
-            $user = User::where('username', $result['username'])->first();
+            $user = User::where('name', $result['name'])->first();
             if (!$user || !Hash::check($result['password'], $user->password)) {
-                return response()->json(['message' => 'Invalid username or password'], 401);
+                return response()->json(['message' => 'Invalid name or password'], 401);
             }
             return response()->json([
                 'message' => 'Authentication successful',

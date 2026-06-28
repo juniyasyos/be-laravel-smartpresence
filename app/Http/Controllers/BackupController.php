@@ -29,7 +29,7 @@ class BackupController extends Controller
     {
         $this->authorizeSuperAdmin($request);
 
-        $query = BackupLog::with('creator:id,username')
+        $query = BackupLog::with('creator:id,name')
             ->orderBy('created_at', 'desc');
 
         // Filter by type
@@ -122,7 +122,7 @@ class BackupController extends Controller
 
         return response()->json([
             'message' => 'Backup telah dijadwalkan dan akan segera diproses.',
-            'data'    => $backup->load('creator:id,username'),
+            'data'    => $backup->load('creator:id,name'),
         ], 201);
     }
 

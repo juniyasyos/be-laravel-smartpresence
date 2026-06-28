@@ -49,7 +49,7 @@ class DashboardController extends Controller
                     ->select('id', 'title', 'start_time', 'end_time', 'status', 'room_id', 'created_by', 'organizer')
                     ->with([
                         'room:id,name,location',
-                        'creator:id,username'
+                        'creator:id,name'
                     ])
                     ->withCount([
                         'participants',
