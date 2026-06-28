@@ -33,969 +33,969 @@ class SmartPresenceSeeder extends Seeder
 
         DB::table('users')->insert([
             [
-                'username'=>'SuperAdmin',
+                'name'=>'SuperAdmin',
                 'email'=>'superadmin@mail.com',
-                'password'=>'password',
+                'password'=>\Illuminate\Support\Facades\Hash::make('password'),
                 'role_id'=>1,
-                'is_active'=>true,
+                'status'=>'active',
                 'created_at'=>now(),
                 'updated_at'=>now()
             ],
             [
-                'username'=>'Admin',
+                'name'=>'Admin',
                 'email'=>'admin@mail.com',
-                'password'=>'password',
+                'password'=>\Illuminate\Support\Facades\Hash::make('password'),
                 'role_id'=>2,
-                'is_active'=>true,
+                'status'=>'active',
                 'created_at'=>now(),
                 'updated_at'=>now()
             ],
             [
-                'username'=>'Sekretaris',
+                'name'=>'Sekretaris',
                 'email'=>'sekretaris@mail.com',
-                'password'=>'password',
+                'password'=>\Illuminate\Support\Facades\Hash::make('password'),
                 'role_id'=>3,
-                'is_active'=>true,
+                'status'=>'active',
                 'created_at'=>now(),
                 'updated_at'=>now()
             ],
 
     // SPI
     [
-        'username'=>'admin_spi',
+        'name'=>'admin_spi',
         'email'=>'',
-        'password'=>'BintangSPI27',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BintangSPI27'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_spi',
+        'name'=>'sekre_spi',
         'email'=>'',
-        'password'=>'PelangiSPI82',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PelangiSPI82'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Direksi
     [
-        'username'=>'admin_direksi',
+        'name'=>'admin_direksi',
         'email'=>'',
-        'password'=>'MentariDireksi14',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MentariDireksi14'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_direksi',
+        'name'=>'sekre_direksi',
         'email'=>'',
-        'password'=>'SamudraDireksi69',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SamudraDireksi69'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Pemasaran
     [
-        'username'=>'admin_pemasaran',
+        'name'=>'admin_pemasaran',
         'email'=>'',
-        'password'=>'RajawaliPemasaran31',
+        'password'=>\Illuminate\Support\Facades\Hash::make('RajawaliPemasaran31'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_pemasaran',
+        'name'=>'sekre_pemasaran',
         'email'=>'',
-        'password'=>'MawarPemasaran88',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MawarPemasaran88'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // IGD
     [
-        'username'=>'admin_igd',
+        'name'=>'admin_igd',
         'email'=>'',
-        'password'=>'KompasIGD25',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KompasIGD25'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_igd',
+        'name'=>'sekre_igd',
         'email'=>'',
-        'password'=>'LenteraIGD73',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LenteraIGD73'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Pelayanan Medis
     [
-        'username'=>'admin_pelayananmedis',
+        'name'=>'admin_pelayananmedis',
         'email'=>'',
-        'password'=>'AnggrekMedis42',
+        'password'=>\Illuminate\Support\Facades\Hash::make('AnggrekMedis42'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_pelayananmedis',
+        'name'=>'sekre_pelayananmedis',
         'email'=>'',
-        'password'=>'CakrawalaMedis91',
+        'password'=>\Illuminate\Support\Facades\Hash::make('CakrawalaMedis91'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Casemix
     [
-        'username'=>'admin_casemix',
+        'name'=>'admin_casemix',
         'email'=>'',
-        'password'=>'DelimaCasemix36',
+        'password'=>\Illuminate\Support\Facades\Hash::make('DelimaCasemix36'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_casemix',
+        'name'=>'sekre_casemix',
         'email'=>'',
-        'password'=>'KenangaCasemix57',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KenangaCasemix57'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Rawat Jalan
     [
-        'username'=>'admin_rawatjalan',
+        'name'=>'admin_rawatjalan',
         'email'=>'',
-        'password'=>'MerpatiRawat18',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MerpatiRawat18'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_rawatjalan',
+        'name'=>'sekre_rawatjalan',
         'email'=>'',
-        'password'=>'NusantaraRawat84',
+        'password'=>\Illuminate\Support\Facades\Hash::make('NusantaraRawat84'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // K3
     [
-        'username'=>'admin_k3',
+        'name'=>'admin_k3',
         'email'=>'',
-        'password'=>'GarudaK358',
+        'password'=>\Illuminate\Support\Facades\Hash::make('GarudaK358'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_k3',
+        'name'=>'sekre_k3',
         'email'=>'',
-        'password'=>'SenjaK312',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SenjaK312'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Penunjang Medis
     [
-        'username'=>'admin_penunjangmedis',
+        'name'=>'admin_penunjangmedis',
         'email'=>'',
-        'password'=>'BerlianPenunjang44',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BerlianPenunjang44'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_penunjangmedis',
+        'name'=>'sekre_penunjangmedis',
         'email'=>'',
-        'password'=>'EmbunPenunjang76',
+        'password'=>\Illuminate\Support\Facades\Hash::make('EmbunPenunjang76'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Keperawatan
     [
-        'username'=>'admin_keperawatan',
+        'name'=>'admin_keperawatan',
         'email'=>'',
-        'password'=>'HarapanPerawat23',
+        'password'=>\Illuminate\Support\Facades\Hash::make('HarapanPerawat23'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_keperawatan',
+        'name'=>'sekre_keperawatan',
         'email'=>'',
-        'password'=>'BahariPerawat67',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BahariPerawat67'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // PKRS
     [
-        'username'=>'admin_pkrs',
+        'name'=>'admin_pkrs',
         'email'=>'',
-        'password'=>'MahkotaPKRS39',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MahkotaPKRS39'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_pkrs',
+        'name'=>'sekre_pkrs',
         'email'=>'',
-        'password'=>'MelatiPKRS83',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MelatiPKRS83'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // PPI
     [
-        'username'=>'admin_ppi',
+        'name'=>'admin_ppi',
         'email'=>'',
-        'password'=>'PelitaPPI41',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PelitaPPI41'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_ppi',
+        'name'=>'sekre_ppi',
         'email'=>'',
-        'password'=>'KencanaPPI79',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KencanaPPI79'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // HD
     [
-        'username'=>'admin_hd',
+        'name'=>'admin_hd',
         'email'=>'',
-        'password'=>'SakuraHD11',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SakuraHD11'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_hd',
+        'name'=>'sekre_hd',
         'email'=>'',
-        'password'=>'LaksanaHD63',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LaksanaHD63'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Teratai
     [
-        'username'=>'admin_teratai',
+        'name'=>'admin_teratai',
         'email'=>'',
-        'password'=>'TerataiEmas24',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TerataiEmas24'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_teratai',
+        'name'=>'sekre_teratai',
         'email'=>'',
-        'password'=>'TerataiBiru85',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TerataiBiru85'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Anturium
     [
-        'username'=>'admin_anturium',
+        'name'=>'admin_anturium',
         'email'=>'',
-        'password'=>'AnturiumHijau47',
+        'password'=>\Illuminate\Support\Facades\Hash::make('AnturiumHijau47'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_anturium',
+        'name'=>'sekre_anturium',
         'email'=>'',
-        'password'=>'AnturiumUngu92',
+        'password'=>\Illuminate\Support\Facades\Hash::make('AnturiumUngu92'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Rosalina
     [
-        'username'=>'admin_rosalina',
+        'name'=>'admin_rosalina',
         'email'=>'',
-        'password'=>'RosalinaMerah53',
+        'password'=>\Illuminate\Support\Facades\Hash::make('RosalinaMerah53'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_rosalina',
+        'name'=>'sekre_rosalina',
         'email'=>'',
-        'password'=>'RosalinaPutih16',
+        'password'=>\Illuminate\Support\Facades\Hash::make('RosalinaPutih16'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // ICU
     [
-        'username'=>'admin_icu',
+        'name'=>'admin_icu',
         'email'=>'',
-        'password'=>'JagatICU72',
+        'password'=>\Illuminate\Support\Facades\Hash::make('JagatICU72'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_icu',
+        'name'=>'sekre_icu',
         'email'=>'',
-        'password'=>'LangitICU29',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LangitICU29'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Alamanda
     [
-        'username'=>'admin_alamanda',
+        'name'=>'admin_alamanda',
         'email'=>'',
-        'password'=>'AlamandaKuning61',
+        'password'=>\Illuminate\Support\Facades\Hash::make('AlamandaKuning61'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_alamanda',
+        'name'=>'sekre_alamanda',
         'email'=>'',
-        'password'=>'AlamandaJingga34',
+        'password'=>\Illuminate\Support\Facades\Hash::make('AlamandaJingga34'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Perinatologi
     [
-        'username'=>'admin_perinatologi',
+        'name'=>'admin_perinatologi',
         'email'=>'',
-        'password'=>'KasihPerina48',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KasihPerina48'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_perinatologi',
+        'name'=>'sekre_perinatologi',
         'email'=>'',
-        'password'=>'BundaPerina95',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BundaPerina95'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // OK
     [
-        'username'=>'admin_ok',
+        'name'=>'admin_ok',
         'email'=>'',
-        'password'=>'PusakaOK13',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PusakaOK13'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_ok',
+        'name'=>'sekre_ok',
         'email'=>'',
-        'password'=>'MustikaOK81',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MustikaOK81'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Mutu
     [
-        'username'=>'admin_mutu',
+        'name'=>'admin_mutu',
         'email'=>'',
-        'password'=>'MutiaraMutu26',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MutiaraMutu26'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_mutu',
+        'name'=>'sekre_mutu',
         'email'=>'',
-        'password'=>'PratamaMutu74',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PratamaMutu74'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Lotus
     [
-        'username'=>'admin_lotus',
+        'name'=>'admin_lotus',
         'email'=>'',
-        'password'=>'LotusPerak38',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LotusPerak38'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_lotus',
+        'name'=>'sekre_lotus',
         'email'=>'',
-        'password'=>'LotusKristal65',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LotusKristal65'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Tulip
     [
-        'username'=>'admin_tulip',
+        'name'=>'admin_tulip',
         'email'=>'',
-        'password'=>'TulipCerah43',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TulipCerah43'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_tulip',
+        'name'=>'sekre_tulip',
         'email'=>'',
-        'password'=>'TulipDamai87',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TulipDamai87'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Farmasi
     [
-        'username'=>'admin_farmasi',
+        'name'=>'admin_farmasi',
         'email'=>'',
-        'password'=>'FarmasiSehat21',
+        'password'=>\Illuminate\Support\Facades\Hash::make('FarmasiSehat21'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_farmasi',
+        'name'=>'sekre_farmasi',
         'email'=>'',
-        'password'=>'FarmasiPrima68',
+        'password'=>\Illuminate\Support\Facades\Hash::make('FarmasiPrima68'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // VK
     [
-        'username'=>'admin_vk',
+        'name'=>'admin_vk',
         'email'=>'',
-        'password'=>'BahagiaVK54',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BahagiaVK54'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_vk',
+        'name'=>'sekre_vk',
         'email'=>'',
-        'password'=>'SentosaVK19',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SentosaVK19'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Laboratorium
     [
-        'username'=>'admin_laboratorium',
+        'name'=>'admin_laboratorium',
         'email'=>'',
-        'password'=>'LabCemerlang46',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LabCemerlang46'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_laboratorium',
+        'name'=>'sekre_laboratorium',
         'email'=>'',
-        'password'=>'LabGemilang77',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LabGemilang77'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Rekam Medis
     [
-        'username'=>'admin_rekammedis',
+        'name'=>'admin_rekammedis',
         'email'=>'',
-        'password'=>'ArsipMedis28',
+        'password'=>\Illuminate\Support\Facades\Hash::make('ArsipMedis28'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_rekammedis',
+        'name'=>'sekre_rekammedis',
         'email'=>'',
-        'password'=>'DataMedis86',
+        'password'=>\Illuminate\Support\Facades\Hash::make('DataMedis86'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Radiologi
     [
-        'username'=>'admin_radiologi',
+        'name'=>'admin_radiologi',
         'email'=>'',
-        'password'=>'SinarRadiologi35',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SinarRadiologi35'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_radiologi',
+        'name'=>'sekre_radiologi',
         'email'=>'',
-        'password'=>'GammaRadiologi71',
+        'password'=>\Illuminate\Support\Facades\Hash::make('GammaRadiologi71'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Gizi
     [
-        'username'=>'admin_gizi',
+        'name'=>'admin_gizi',
         'email'=>'',
-        'password'=>'NutrisiGizi22',
+        'password'=>\Illuminate\Support\Facades\Hash::make('NutrisiGizi22'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_gizi',
+        'name'=>'sekre_gizi',
         'email'=>'',
-        'password'=>'VitaminGizi64',
+        'password'=>\Illuminate\Support\Facades\Hash::make('VitaminGizi64'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Umum RT
     [
-        'username'=>'admin_umumrt',
+        'name'=>'admin_umumrt',
         'email'=>'',
-        'password'=>'MandiriRT17',
+        'password'=>\Illuminate\Support\Facades\Hash::make('MandiriRT17'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_umumrt',
+        'name'=>'sekre_umumrt',
         'email'=>'',
-        'password'=>'SejahteraRT93',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SejahteraRT93'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Kepegawaian
     [
-        'username'=>'admin_umumkepegawaian',
+        'name'=>'admin_umumkepegawaian',
         'email'=>'',
-        'password'=>'PegawaiHebat51',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PegawaiHebat51'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_umumkepegawaian',
+        'name'=>'sekre_umumkepegawaian',
         'email'=>'',
-        'password'=>'PegawaiUnggul78',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PegawaiUnggul78'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // TPP
     [
-        'username'=>'admin_tpp',
+        'name'=>'admin_tpp',
         'email'=>'',
-        'password'=>'HarmoniTPP32',
+        'password'=>\Illuminate\Support\Facades\Hash::make('HarmoniTPP32'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_tpp',
+        'name'=>'sekre_tpp',
         'email'=>'',
-        'password'=>'PrestasiTPP89',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PrestasiTPP89'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // IPP
     [
-        'username'=>'admin_ipp',
+        'name'=>'admin_ipp',
         'email'=>'',
-        'password'=>'PelangganSetia27',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PelangganSetia27'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_ipp',
+        'name'=>'sekre_ipp',
         'email'=>'',
-        'password'=>'LayananPrima84',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LayananPrima84'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Keuangan
     [
-        'username'=>'admin_keuangan',
+        'name'=>'admin_keuangan',
         'email'=>'',
-        'password'=>'SaldoKeuangan56',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SaldoKeuangan56'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_keuangan',
+        'name'=>'sekre_keuangan',
         'email'=>'',
-        'password'=>'NeracaKeuangan15',
+        'password'=>\Illuminate\Support\Facades\Hash::make('NeracaKeuangan15'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Akuntansi
     [
-        'username'=>'admin_akuntansi',
+        'name'=>'admin_akuntansi',
         'email'=>'',
-        'password'=>'JurnalAkuntansi62',
+        'password'=>\Illuminate\Support\Facades\Hash::make('JurnalAkuntansi62'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_akuntansi',
+        'name'=>'sekre_akuntansi',
         'email'=>'',
-        'password'=>'LedgerAkuntansi37',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LedgerAkuntansi37'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Perpajakan
     [
-        'username'=>'admin_perpajakan',
+        'name'=>'admin_perpajakan',
         'email'=>'',
-        'password'=>'PajakTertib49',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PajakTertib49'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_perpajakan',
+        'name'=>'sekre_perpajakan',
         'email'=>'',
-        'password'=>'PajakAman94',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PajakAman94'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Sekretariat
     [
-        'username'=>'admin_sekretariat',
+        'name'=>'admin_sekretariat',
         'email'=>'',
-        'password'=>'SekretariatMaju33',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SekretariatMaju33'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_sekretariat',
+        'name'=>'sekre_sekretariat',
         'email'=>'',
-        'password'=>'SekretariatHebat82',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SekretariatHebat82'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Kasir
     [
-        'username'=>'admin_kasir',
+        'name'=>'admin_kasir',
         'email'=>'',
-        'password'=>'KasirCerdas52',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KasirCerdas52'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_kasir',
+        'name'=>'sekre_kasir',
         'email'=>'',
-        'password'=>'KasirCepat18',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KasirCepat18'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Transportasi
     [
-        'username'=>'admin_transportasi',
+        'name'=>'admin_transportasi',
         'email'=>'',
-        'password'=>'TransportLancar45',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TransportLancar45'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_transportasi',
+        'name'=>'sekre_transportasi',
         'email'=>'',
-        'password'=>'TransportAman97',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TransportAman97'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Kebersihan
     [
-        'username'=>'admin_kebersihan',
+        'name'=>'admin_kebersihan',
         'email'=>'',
-        'password'=>'BersihKinclong24',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BersihKinclong24'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_kebersihan',
+        'name'=>'sekre_kebersihan',
         'email'=>'',
-        'password'=>'RapiWangi73',
+        'password'=>\Illuminate\Support\Facades\Hash::make('RapiWangi73'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // CSSD
     [
-        'username'=>'admin_cssd',
+        'name'=>'admin_cssd',
         'email'=>'',
-        'password'=>'SterilCSSD58',
+        'password'=>\Illuminate\Support\Facades\Hash::make('SterilCSSD58'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_cssd',
+        'name'=>'sekre_cssd',
         'email'=>'',
-        'password'=>'HigienisCSSD14',
+        'password'=>\Illuminate\Support\Facades\Hash::make('HigienisCSSD14'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Akupunktur
     [
-        'username'=>'admin_akunpuktur',
+        'name'=>'admin_akunpuktur',
         'email'=>'',
-        'password'=>'JarumSehat66',
+        'password'=>\Illuminate\Support\Facades\Hash::make('JarumSehat66'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_akunpuktur',
+        'name'=>'sekre_akunpuktur',
         'email'=>'',
-        'password'=>'TerapiNyaman31',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TerapiNyaman31'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Diklat
     [
-        'username'=>'admin_kepegawaiandiklat',
+        'name'=>'admin_kepegawaiandiklat',
         'email'=>'',
-        'password'=>'DiklatUnggul42',
+        'password'=>\Illuminate\Support\Facades\Hash::make('DiklatUnggul42'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_kepegawaiandiklat',
+        'name'=>'sekre_kepegawaiandiklat',
         'email'=>'',
-        'password'=>'BelajarMaju88',
+        'password'=>\Illuminate\Support\Facades\Hash::make('BelajarMaju88'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // TIK
     [
-        'username'=>'admin_tik',
+        'name'=>'admin_tik',
         'email'=>'',
-        'password'=>'DigitalTIK57',
+        'password'=>\Illuminate\Support\Facades\Hash::make('DigitalTIK57'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_tik',
+        'name'=>'sekre_tik',
         'email'=>'',
-        'password'=>'TeknologiTIK23',
+        'password'=>\Illuminate\Support\Facades\Hash::make('TeknologiTIK23'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // TI
     [
-        'username'=>'admin_ti',
+        'name'=>'admin_ti',
         'email'=>'',
-        'password'=>'ServerTI69',
+        'password'=>\Illuminate\Support\Facades\Hash::make('ServerTI69'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_ti',
+        'name'=>'sekre_ti',
         'email'=>'',
-        'password'=>'JaringanTI12',
+        'password'=>\Illuminate\Support\Facades\Hash::make('JaringanTI12'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Laundry
     [
-        'username'=>'admin_laundry',
+        'name'=>'admin_laundry',
         'email'=>'',
-        'password'=>'LaundryBersih47',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LaundryBersih47'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_laundry',
+        'name'=>'sekre_laundry',
         'email'=>'',
-        'password'=>'LaundryHarum91',
+        'password'=>\Illuminate\Support\Facades\Hash::make('LaundryHarum91'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
 
     // Keamanan
     [
-        'username'=>'admin_keamanan',
+        'name'=>'admin_keamanan',
         'email'=>'',
-        'password'=>'KeamananSiaga36',
+        'password'=>\Illuminate\Support\Facades\Hash::make('KeamananSiaga36'),
         'role_id'=>2,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],
     [
-        'username'=>'sekre_keamanan',
+        'name'=>'sekre_keamanan',
         'email'=>'',
-        'password'=>'PenjagaAman75',
+        'password'=>\Illuminate\Support\Facades\Hash::make('PenjagaAman75'),
         'role_id'=>3,
-        'is_active'=>true,
+        'status'=>'active',
         'created_at'=>now(),
         'updated_at'=>now()
     ],

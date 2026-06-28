@@ -22,7 +22,7 @@ class StoreAuthRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required',
+            'nip' => 'required',
             'password' => 'required'
         ];
     }
