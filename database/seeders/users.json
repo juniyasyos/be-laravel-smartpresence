@@ -1,0 +1,875 @@
+[
+    {
+        "name": "SuperAdmin",
+        "email": "superadmin@mail.com",
+        "password": "password",
+        "role_id": 1,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "Admin",
+        "email": "admin@mail.com",
+        "password": "password",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "Sekretaris",
+        "email": "sekretaris@mail.com",
+        "password": "password",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_spi",
+        "email": "",
+        "password": "BintangSPI27",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_spi",
+        "email": "",
+        "password": "PelangiSPI82",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_direksi",
+        "email": "",
+        "password": "MentariDireksi14",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_direksi",
+        "email": "",
+        "password": "SamudraDireksi69",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_pemasaran",
+        "email": "",
+        "password": "RajawaliPemasaran31",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_pemasaran",
+        "email": "",
+        "password": "MawarPemasaran88",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_igd",
+        "email": "",
+        "password": "KompasIGD25",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_igd",
+        "email": "",
+        "password": "LenteraIGD73",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_pelayananmedis",
+        "email": "",
+        "password": "AnggrekMedis42",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_pelayananmedis",
+        "email": "",
+        "password": "CakrawalaMedis91",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_casemix",
+        "email": "",
+        "password": "DelimaCasemix36",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_casemix",
+        "email": "",
+        "password": "KenangaCasemix57",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_rawatjalan",
+        "email": "",
+        "password": "MerpatiRawat18",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_rawatjalan",
+        "email": "",
+        "password": "NusantaraRawat84",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_k3",
+        "email": "",
+        "password": "GarudaK358",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_k3",
+        "email": "",
+        "password": "SenjaK312",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_penunjangmedis",
+        "email": "",
+        "password": "BerlianPenunjang44",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_penunjangmedis",
+        "email": "",
+        "password": "EmbunPenunjang76",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_keperawatan",
+        "email": "",
+        "password": "HarapanPerawat23",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_keperawatan",
+        "email": "",
+        "password": "BahariPerawat67",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_pkrs",
+        "email": "",
+        "password": "MahkotaPKRS39",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_pkrs",
+        "email": "",
+        "password": "MelatiPKRS83",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_ppi",
+        "email": "",
+        "password": "PelitaPPI41",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_ppi",
+        "email": "",
+        "password": "KencanaPPI79",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_hd",
+        "email": "",
+        "password": "SakuraHD11",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_hd",
+        "email": "",
+        "password": "LaksanaHD63",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_teratai",
+        "email": "",
+        "password": "TerataiEmas24",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_teratai",
+        "email": "",
+        "password": "TerataiBiru85",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_anturium",
+        "email": "",
+        "password": "AnturiumHijau47",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_anturium",
+        "email": "",
+        "password": "AnturiumUngu92",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_rosalina",
+        "email": "",
+        "password": "RosalinaMerah53",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_rosalina",
+        "email": "",
+        "password": "RosalinaPutih16",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_icu",
+        "email": "",
+        "password": "JagatICU72",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_icu",
+        "email": "",
+        "password": "LangitICU29",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_alamanda",
+        "email": "",
+        "password": "AlamandaKuning61",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_alamanda",
+        "email": "",
+        "password": "AlamandaJingga34",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_perinatologi",
+        "email": "",
+        "password": "KasihPerina48",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_perinatologi",
+        "email": "",
+        "password": "BundaPerina95",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_ok",
+        "email": "",
+        "password": "PusakaOK13",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_ok",
+        "email": "",
+        "password": "MustikaOK81",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_mutu",
+        "email": "",
+        "password": "MutiaraMutu26",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_mutu",
+        "email": "",
+        "password": "PratamaMutu74",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_lotus",
+        "email": "",
+        "password": "LotusPerak38",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_lotus",
+        "email": "",
+        "password": "LotusKristal65",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_tulip",
+        "email": "",
+        "password": "TulipCerah43",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_tulip",
+        "email": "",
+        "password": "TulipDamai87",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_farmasi",
+        "email": "",
+        "password": "FarmasiSehat21",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_farmasi",
+        "email": "",
+        "password": "FarmasiPrima68",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_vk",
+        "email": "",
+        "password": "BahagiaVK54",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_vk",
+        "email": "",
+        "password": "SentosaVK19",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_laboratorium",
+        "email": "",
+        "password": "LabCemerlang46",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_laboratorium",
+        "email": "",
+        "password": "LabGemilang77",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_rekammedis",
+        "email": "",
+        "password": "ArsipMedis28",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_rekammedis",
+        "email": "",
+        "password": "DataMedis86",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_radiologi",
+        "email": "",
+        "password": "SinarRadiologi35",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_radiologi",
+        "email": "",
+        "password": "GammaRadiologi71",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_gizi",
+        "email": "",
+        "password": "NutrisiGizi22",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_gizi",
+        "email": "",
+        "password": "VitaminGizi64",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_umumrt",
+        "email": "",
+        "password": "MandiriRT17",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_umumrt",
+        "email": "",
+        "password": "SejahteraRT93",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_umumkepegawaian",
+        "email": "",
+        "password": "PegawaiHebat51",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_umumkepegawaian",
+        "email": "",
+        "password": "PegawaiUnggul78",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_tpp",
+        "email": "",
+        "password": "HarmoniTPP32",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_tpp",
+        "email": "",
+        "password": "PrestasiTPP89",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_ipp",
+        "email": "",
+        "password": "PelangganSetia27",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_ipp",
+        "email": "",
+        "password": "LayananPrima84",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_keuangan",
+        "email": "",
+        "password": "SaldoKeuangan56",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_keuangan",
+        "email": "",
+        "password": "NeracaKeuangan15",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_akuntansi",
+        "email": "",
+        "password": "JurnalAkuntansi62",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_akuntansi",
+        "email": "",
+        "password": "LedgerAkuntansi37",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_perpajakan",
+        "email": "",
+        "password": "PajakTertib49",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_perpajakan",
+        "email": "",
+        "password": "PajakAman94",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_sekretariat",
+        "email": "",
+        "password": "SekretariatMaju33",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_sekretariat",
+        "email": "",
+        "password": "SekretariatHebat82",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_kasir",
+        "email": "",
+        "password": "KasirCerdas52",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_kasir",
+        "email": "",
+        "password": "KasirCepat18",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_transportasi",
+        "email": "",
+        "password": "TransportLancar45",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_transportasi",
+        "email": "",
+        "password": "TransportAman97",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_kebersihan",
+        "email": "",
+        "password": "BersihKinclong24",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_kebersihan",
+        "email": "",
+        "password": "RapiWangi73",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_cssd",
+        "email": "",
+        "password": "SterilCSSD58",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_cssd",
+        "email": "",
+        "password": "HigienisCSSD14",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_akunpuktur",
+        "email": "",
+        "password": "JarumSehat66",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_akunpuktur",
+        "email": "",
+        "password": "TerapiNyaman31",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_kepegawaiandiklat",
+        "email": "",
+        "password": "DiklatUnggul42",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_kepegawaiandiklat",
+        "email": "",
+        "password": "BelajarMaju88",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_tik",
+        "email": "",
+        "password": "DigitalTIK57",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_tik",
+        "email": "",
+        "password": "TeknologiTIK23",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_ti",
+        "email": "",
+        "password": "ServerTI69",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_ti",
+        "email": "",
+        "password": "JaringanTI12",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_laundry",
+        "email": "",
+        "password": "LaundryBersih47",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_laundry",
+        "email": "",
+        "password": "LaundryHarum91",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "admin_keamanan",
+        "email": "",
+        "password": "KeamananSiaga36",
+        "role_id": 2,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    },
+    {
+        "name": "sekre_keamanan",
+        "email": "",
+        "password": "PenjagaAman75",
+        "role_id": 3,
+        "status": "active",
+        "created_at": "2026-06-28 19:00:00",
+        "updated_at": "2026-06-28 19:00:00"
+    }
+]
