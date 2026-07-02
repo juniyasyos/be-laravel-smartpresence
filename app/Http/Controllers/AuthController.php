@@ -23,7 +23,7 @@ class AuthController extends Controller
     {
         return response()->json([
             'sso_enabled' => config('iam.enabled', false),
-            'sso_login_url' => config('iam.enabled') ? config('iam.login_route', '/sso/login') : null,
+            'sso_login_url' => config('iam.enabled') ? route('iam.sso.login') : null,
         ]);
     }
 
