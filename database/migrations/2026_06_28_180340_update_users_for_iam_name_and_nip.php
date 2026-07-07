@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('username', 'name');
-            $table->string('nip', 50)->unique()->after('email');
-        });
+        if (Schema::hasColumn('users', 'username') && !Schema::hasColumn('users', 'name')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('username', 'name');
+            });
+        }
+
+        if (!Schema::hasColumn('users', 'nip')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('nip', 50)->nullable()->unique()->after('email');
+            });
+        }
     }
 
     /**
@@ -22,9 +29,21 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->renameColumn('name', 'username');
-            $table->dropColumn('nip');
-        });
+        // Jika kolom name ada dan username belum ada, rename name -> username
+        if (
+            Schema::hasColumn('users', 'name') &&
+            ! Schema::hasColumn('users', 'username')
+        ) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->renameColumn('name', 'username');
+            });
+        }
+
+        // Jika kolom nip ada, hapus
+        if (Schema::hasColumn('users', 'nip')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('nip');
+            });
+        }
     }
 };

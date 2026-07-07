@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use App\Http\Requests\StoreAuthRequest;
-
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -15,7 +14,7 @@ class AuthController extends Controller
      * Get Auth Mode
      *
      * Memberikan informasi ke frontend apakah menggunakan SSO (NexaID) atau Local Login.
-     * 
+     *
      * @unauthenticated
      * @tags Authentication
      */
@@ -31,7 +30,7 @@ class AuthController extends Controller
      * User Login
      *
      * Autentikasi pengguna menggunakan NIP dan password untuk mendapatkan Bearer Token.
-     * 
+     *
      * @unauthenticated
      * @tags Authentication
      * @response 200 {
@@ -49,7 +48,7 @@ class AuthController extends Controller
     public function login(StoreAuthRequest $request)
     {
         $request->validated();
-        
+
         if (!Auth::attempt($request->only('nip', 'password'))) {
             return response()->json([
                 'message' => 'NIP atau password salah'
@@ -92,7 +91,7 @@ class AuthController extends Controller
             'user' => $user
         ]);
     }
-    
+
     /**
      * User Logout
      *

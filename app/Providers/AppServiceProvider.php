@@ -22,7 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Facades\URL::forceRootUrl('http://localhost:7200');
 
         Scramble::configure()
         ->withDocumentTransformers(function (OpenApi $openApi) {

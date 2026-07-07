@@ -11,19 +11,31 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (!Schema::hasColumn('users', 'iam_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('iam_id')->nullable()->unique()->after('id');
+            });
+        }
+        
+        if (!Schema::hasColumn('users', 'status')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->string('status', 20)->default('active')->after('is_active');
+            });
+        }
+
         Schema::table('users', function (Blueprint $table) {
-            $table->string('iam_id')->nullable()->unique()->after('id');
-            $table->string('status', 20)->default('active')->after('is_active');
             $table->string('password')->nullable()->change();
         });
 
-        // Pindahkan data dari is_active ke status
-        \Illuminate\Support\Facades\DB::statement("UPDATE users SET status = 'active' WHERE is_active = 1");
-        \Illuminate\Support\Facades\DB::statement("UPDATE users SET status = 'inactive' WHERE is_active = 0");
+        if (Schema::hasColumn('users', 'is_active')) {
+            // Pindahkan data dari is_active ke status
+            \Illuminate\Support\Facades\DB::statement("UPDATE users SET status = 'active' WHERE is_active = 1");
+            \Illuminate\Support\Facades\DB::statement("UPDATE users SET status = 'inactive' WHERE is_active = 0");
 
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_active');
-        });
+            Schema::table('users', function (Blueprint $table) {
+                $table->dropColumn('is_active');
+            });
+        }
     }
 
     /**
@@ -31,16 +43,24 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_active')->default(true)->after('status');
-        });
+        if (!Schema::hasColumn('users', 'is_active')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->boolean('is_active')->default(true)->after('status');
+            });
 
-        \Illuminate\Support\Facades\DB::statement("UPDATE users SET is_active = 1 WHERE status = 'active'");
-        \Illuminate\Support\Facades\DB::statement("UPDATE users SET is_active = 0 WHERE status != 'active'");
+            if (Schema::hasColumn('users', 'status')) {
+                \Illuminate\Support\Facades\DB::statement("UPDATE users SET is_active = 1 WHERE status = 'active'");
+                \Illuminate\Support\Facades\DB::statement("UPDATE users SET is_active = 0 WHERE status != 'active'");
+            }
+        }
 
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['iam_id', 'status']);
-            // Mengembalikan password menjadi NOT NULL (tergantung DBMS, ini bisa gagal jika ada data null, jadi dibiarkan saja)
+            if (Schema::hasColumn('users', 'iam_id')) {
+                $table->dropColumn('iam_id');
+            }
+            if (Schema::hasColumn('users', 'status')) {
+                $table->dropColumn('status');
+            }
         });
     }
 };

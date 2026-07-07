@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['role_id']);
-            $table->dropColumn('role_id');
-        });
+        if (Schema::hasColumn('users', 'role_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                // Ignore foreign key drop error if it doesn't exist
+                try {
+                    $table->dropForeign(['role_id']);
+                } catch (\Exception $e) {
+                    // Foreign key might not exist
+                }
+                $table->dropColumn('role_id');
+            });
+        }
     }
 
     /**
@@ -22,8 +29,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('set null');
-        });
+        if (!Schema::hasColumn('users', 'role_id')) {
+            Schema::table('users', function (Blueprint $table) {
+                $table->foreignId('role_id')->nullable()->constrained('roles')->onDelete('set null');
+            });
+        }
     }
 };
