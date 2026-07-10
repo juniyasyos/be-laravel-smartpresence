@@ -19,7 +19,15 @@ return [
 
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        // local
+        'http://localhost:7250',
+        'http://127.0.0.1:7250',
+        // dev server
+        'http://192.168.1.9:7250',
+        // prod server
+        'http://192.168.1.4:7250',
+    ],
 
     'allowed_origins_patterns' => [],
 
