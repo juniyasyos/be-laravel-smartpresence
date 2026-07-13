@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Juniyasyos\IamClient\Services\UserApplicationsService;
 
 class AuthController extends Controller
 {
@@ -123,10 +125,57 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()?->delete();
+        $guardName = config('iam.guard', 'web');
+        $guardInstance = \Illuminate\Support\Facades\Auth::guard($guardName);
+        $userId = $guardInstance->id();
+        $sessionId = $request->hasSession() ? $request->session()->getId() : null;
+
+        Log::info('SSO logout initiated', [
+            'action' => 'logout_initiated',
+            'method' => __METHOD__,
+            'url' => $request->fullUrl(),
+            'user_id' => $userId,
+            'session_id' => $sessionId,
+        ]);
+
+        $token = $request->user()?->currentAccessToken();
+        if ($token && method_exists($token, 'delete')) {
+            $token->delete();
+        }
+
+        if ($userId) {
+            // Clear application cache before logout (Sesuai NexaID)
+            UserApplicationsService::clearUserAppCache($userId);
+            UserApplicationsService::clearSessionAppCache();
+        }
+
+        // Logout dari guard web dan invalidate session untuk memutus SPA Auth
+        $guardInstance->logout();
+        if ($request->hasSession()) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            $request->session()->forget('iam');
+        }
+
+        Log::info('SSO logout completed', [
+            'action' => 'logout_completed',
+            'method' => __METHOD__,
+            'previous_user_id' => $userId,
+            'old_session_id' => $sessionId,
+            'new_session_id' => $request->hasSession() ? $request->session()->getId() : null,
+        ]);
+
+        $ssoLogoutUrl = null;
+        if (config('iam.enabled', false) || env('USE_SSO', false)) {
+            $iamBase = trim((string) \Juniyasyos\IamClient\Support\IamConfig::baseUrl());
+            if ($iamBase !== '') {
+                $ssoLogoutUrl = rtrim($iamBase, '/') . '/logout';
+            }
+        }
 
         return response()->json([
-            'message' => 'Logout berhasil'
+            'message' => 'Logout berhasil',
+            'sso_logout_url' => $ssoLogoutUrl
         ]);
     }
 }
