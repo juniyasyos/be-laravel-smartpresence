@@ -168,8 +168,11 @@ class AuthController extends Controller
         $ssoLogoutUrl = null;
         if (config('iam.enabled', false) || env('USE_SSO', false)) {
             $iamBase = trim((string) \Juniyasyos\IamClient\Support\IamConfig::baseUrl());
+            $appKey = \Juniyasyos\IamClient\Support\IamConfig::appKey();
+            $callback = urlencode(config('app.url') . '/login');
+            
             if ($iamBase !== '') {
-                $ssoLogoutUrl = rtrim($iamBase, '/') . '/logout';
+                $ssoLogoutUrl = rtrim($iamBase, '/') . '/logout?app=' . $appKey . '&callback=' . $callback;
             }
         }
 
